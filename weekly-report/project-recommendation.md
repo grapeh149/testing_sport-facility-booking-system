@@ -1,8 +1,8 @@
 # Đề Xuất Đề Tài Bài Tập Lớn
 
 ## 1. Thông Tin Nhóm
-**Nhóm:** 6
-**Thành viên:**
+**Nhóm:** 6  
+**Thành viên:**  
 
 | Thành viên     | MSSV       |
 | -------------- | ---------- |
