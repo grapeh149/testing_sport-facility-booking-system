@@ -1,9 +1,9 @@
 # Báo cáo Tuần 1
 
-**Tuần:** 1 (02/03/2026 - 08/03/2026)
-**Nhóm:** 6
-**Đề tài:** 2 - Hệ Thống Đặt Sân Thể Thao (Sport Facility Booking System)
-**Nhóm trưởng:** Hoàng Thái Huy
+**Tuần:** 1 (02/03/2026 - 08/03/2026)  
+**Nhóm:** 6  
+**Đề tài:** 2 - Hệ Thống Đặt Sân Thể Thao (Sport Facility Booking System)  
+**Nhóm trưởng:** Hoàng Thái Huy  
 
 ---
 
@@ -50,5 +50,5 @@
 
 ---
 
-*Ngày nộp: 08/03/2026*
+*Ngày nộp: 08/03/2026*  
 *Xác nhận của Nhóm trưởng: Hoàng Thái Huy*

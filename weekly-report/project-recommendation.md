@@ -1,8 +1,8 @@
 # Đề Xuất Đề Tài Bài Tập Lớn
 
 ## 1. Thông Tin Nhóm
-**Nhóm:** 6
-**Thành viên:**
+**Nhóm:** 6  
+**Thành viên:**  
 
 | Thành viên     | MSSV       |
 | -------------- | ---------- |
@@ -54,7 +54,7 @@ Hệ thống đặt sân thể thao cho phép người dùng tìm kiếm, xem l�
 ## 4. Công Nghệ Sử Dụng
 
 * **Backend:** Java Spring Boot
-* **Database:** PostgreSQL
+* **Database:** Azure SQL Database 
 * **Frontend:** React.js
 * **Testing:** JUnit, Mockito, Postman
 * **API:** RESTful API
