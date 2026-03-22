@@ -34,15 +34,8 @@ Time_Slot ─────────→ ThongTinDatSan
 
 ## 📸 2. ERD Diagram
 
-<<<<<<< HEAD
-
 ![ERD Diagram](ERD.png)
-=======
-![ERD Diagram](docs/ERD.png)
 
->>>>>>> b545511928603a3d50694024206850df329b447f
-
----
 
 ## 3. CHI TIẾT TỪNG BẢNG
 
