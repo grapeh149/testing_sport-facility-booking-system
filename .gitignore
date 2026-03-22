@@ -1,4 +1,11 @@
-# Ignore everything in this directory
+# Ignore all files
 *
-# Except this file
+
+# Allow folders
+!*/
+
+# Allow gitignore itself
 !.gitignore
+
+# Allow gitkeep files
+!.gitkeep
