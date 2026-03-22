@@ -2,9 +2,9 @@
 
 ## Hệ Thống Đặt Sân Thể Thao — Sport Facility Booking
 
-**Database:** sport_facility_booking 
-**Engine:** SQL Server / Azure SQL 
-**Charset:** NVARCHAR (Unicode support) 
+**Database:** sport_facility_booking  
+**Engine:** SQL Server / Azure SQL  
+**Charset:** NVARCHAR (Unicode support)  
 
 ---
 
