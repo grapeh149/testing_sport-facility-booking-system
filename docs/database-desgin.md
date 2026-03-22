@@ -34,9 +34,8 @@ Time_Slot ─────────→ ThongTinDatSan
 
 ## 📸 2. ERD Diagram
 
-```md
 ![ERD Diagram](docs/ERD.png)
-```
+
 
 ---
 
