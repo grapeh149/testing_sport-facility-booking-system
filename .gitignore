@@ -1,11 +1,8 @@
-# Ignore all files
-*
+# Maven build
+target/
 
-# Allow folders
-!*/
+# OS files
+.DS_Store
 
-# Allow gitignore itself
-!.gitignore
-
-# Allow gitkeep files
-!.gitkeep
+# Logs
+*.log
