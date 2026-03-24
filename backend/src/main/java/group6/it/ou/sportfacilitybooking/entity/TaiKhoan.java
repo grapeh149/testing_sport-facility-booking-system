@@ -11,13 +11,13 @@ public class TaiKhoan {
     @Column(name = "MaTaiKhoan")
     private Integer maTaiKhoan;
 
-    @Column(name = "TenTaiKhoan", length = 50, nullable = false, unique = true)
+    @Column(name = "TenTaiKhoan", nullable = false, unique = true)
     private String tenTaiKhoan;
 
     @Column(name = "MatKhau", length = 255, nullable = false)
     private String matKhau;
 
-    @Column(name = "Role", length = 20)
+    @Column(name = "Role")
     private String role;
 
     @Column(name = "MaNhanVien")
