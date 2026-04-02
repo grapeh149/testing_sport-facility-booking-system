@@ -69,4 +69,24 @@ public class TaiKhoanService {
     public void delete(Integer id) {
         repository.deleteById(id);
     }
+        // ĐĂNG KÝ
+    public TaiKhoanDTO dangKy(TaiKhoanDTO dto) {
+        // Kiểm tra tên tài khoản đã tồn tại chưa
+        TaiKhoan existing = repository.findByTenTaiKhoan(dto.getTenTaiKhoan());
+        if (existing != null)
+            throw new RuntimeException("Tên tài khoản đã tồn tại: " + dto.getTenTaiKhoan());
+
+        TaiKhoan entity = mapper.toEntity(dto);
+        return mapper.toDTO(repository.save(entity));
+    }
+
+    // ĐĂNG NHẬP
+    public TaiKhoanDTO dangNhap(TaiKhoanDTO dto) {
+        TaiKhoan entity = repository.findByTenTaiKhoan(dto.getTenTaiKhoan());
+        if (entity == null)
+            throw new RuntimeException("Tài khoản không tồn tại");
+        if (!entity.getMatKhau().equals(dto.getMatKhau()))
+            throw new RuntimeException("Mật khẩu không đúng");
+        return mapper.toDTO(entity);
+    }
 }
