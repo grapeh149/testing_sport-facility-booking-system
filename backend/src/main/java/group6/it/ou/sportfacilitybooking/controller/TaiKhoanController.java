@@ -47,4 +47,13 @@ public class TaiKhoanController {
     public void delete(@PathVariable Integer id) {
         service.delete(id);
     }
+        @PostMapping("/dang-ky")
+    public TaiKhoanDTO dangKy(@RequestBody TaiKhoanDTO dto) {
+        return service.dangKy(dto);
+    }
+
+    @PostMapping("/dang-nhap")
+    public TaiKhoanDTO dangNhap(@RequestBody TaiKhoanDTO dto) {
+        return service.dangNhap(dto);
+    }
 }
