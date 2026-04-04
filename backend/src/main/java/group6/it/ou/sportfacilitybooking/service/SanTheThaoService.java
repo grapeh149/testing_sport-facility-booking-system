@@ -28,6 +28,14 @@ public class SanTheThaoService {
                 .collect(Collectors.toList());
     }
 
+    // SELECT * FROM SanTheThao WHERE MaChiNhanh = ?
+    public List<SanTheThaoDTO> getByFacilityId(Integer facilityId) {
+        return repository.findByMaChiNhanh(facilityId)
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     // SELECT WHERE MaSan = ?
     public SanTheThaoDTO getById(Integer id) {
         SanTheThao entity = repository.findById(id)
@@ -38,6 +46,13 @@ public class SanTheThaoService {
     // INSERT
     public SanTheThaoDTO create(SanTheThaoDTO dto) {
         SanTheThao entity = mapper.toEntity(dto);
+        return mapper.toDTO(repository.save(entity));
+    }
+
+    // INSERT court for facility from path variable
+    public SanTheThaoDTO createForFacility(Integer facilityId, SanTheThaoDTO dto) {
+        SanTheThao entity = mapper.toEntity(dto);
+        entity.setMaChiNhanh(facilityId);
         return mapper.toDTO(repository.save(entity));
     }
 
