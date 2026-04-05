@@ -10,7 +10,7 @@ import java.time.LocalDate;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uq_san_gio_ngay",
-                        columnNames = {"MaSan", "MaGio", "BookingDate"}
+                        columnNames = {"MaSan","MaGio", "BookingDate"}
                 )
         }
 )

@@ -3,9 +3,11 @@ package group6.it.ou.sportfacilitybooking.mapper;
 import group6.it.ou.sportfacilitybooking.dto.DatSan.DatCocDTO;
 import group6.it.ou.sportfacilitybooking.dto.DatSan.DatCocRequest;
 import group6.it.ou.sportfacilitybooking.entity.ThongTinDatCoc;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
 public class DatCocMapper {
     /**
      * Request → Entity (tạo cọc mới khi booking)

@@ -5,6 +5,7 @@ import group6.it.ou.sportfacilitybooking.dto.DatSan.DatSanDTO;
 import group6.it.ou.sportfacilitybooking.dto.DatSan.DatSanRequest;
 import group6.it.ou.sportfacilitybooking.dto.DatSan.TrangThaiDatSanRequest;
 import group6.it.ou.sportfacilitybooking.entity.KhachHang;
+import group6.it.ou.sportfacilitybooking.entity.SanTheThao;
 import group6.it.ou.sportfacilitybooking.entity.ThongTinDatSan;
 import group6.it.ou.sportfacilitybooking.entity.TimeSlot;
 import org.springframework.beans.factory.annotation.Autowired;
