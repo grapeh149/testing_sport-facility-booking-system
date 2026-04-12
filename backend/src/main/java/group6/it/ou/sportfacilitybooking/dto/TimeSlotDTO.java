@@ -3,40 +3,47 @@ package group6.it.ou.sportfacilitybooking.dto;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 
-/**
- * Dùng cho:
- *   GET /api/courts/{courtId}/time-slots  (API-16)
- *
- * Trả về đủ thông tin để frontend hiển thị lịch khung giờ.
- */
 public class TimeSlotDTO {
+    private Long id;
+    private Long courtId;
+    private Byte dayOfWeek;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private BigDecimal price;
+    private BigDecimal depositRate;
+    private Boolean isActive;
 
-    private Integer maGio;
-    private LocalTime gioBatDau;
-    private LocalTime gioKetThuc;
-    private BigDecimal giaTien;
-
-    // ---- NoArgs ----
     public TimeSlotDTO() {}
 
-    // ---- AllArgs ----
-    public TimeSlotDTO(Integer maGio, LocalTime gioBatDau,
-                            LocalTime gioKetThuc, BigDecimal giaTien) {
-        this.maGio = maGio;
-        this.gioBatDau = gioBatDau;
-        this.gioKetThuc = gioKetThuc;
-        this.giaTien = giaTien;
+    public TimeSlotDTO(Long id, LocalTime startTime, LocalTime endTime, BigDecimal price) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.price = price;
     }
 
-    // ---- Getters ----
-    public Integer getMaGio() { return maGio; }
-    public LocalTime getGioBatDau() { return gioBatDau; }
-    public LocalTime getGioKetThuc() { return gioKetThuc; }
-    public BigDecimal getGiaTien() { return giaTien; }
+    // Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    // ---- Setters ----
-    public void setMaGio(Integer maGio) { this.maGio = maGio; }
-    public void setGioBatDau(LocalTime gioBatDau) { this.gioBatDau = gioBatDau; }
-    public void setGioKetThuc(LocalTime gioKetThuc) { this.gioKetThuc = gioKetThuc; }
-    public void setGiaTien(BigDecimal giaTien) { this.giaTien = giaTien; }
+    public Long getCourtId() { return courtId; }
+    public void setCourtId(Long courtId) { this.courtId = courtId; }
+
+    public Byte getDayOfWeek() { return dayOfWeek; }
+    public void setDayOfWeek(Byte dayOfWeek) { this.dayOfWeek = dayOfWeek; }
+
+    public LocalTime getStartTime() { return startTime; }
+    public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
+
+    public LocalTime getEndTime() { return endTime; }
+    public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
+
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+
+    public BigDecimal getDepositRate() { return depositRate; }
+    public void setDepositRate(BigDecimal depositRate) { this.depositRate = depositRate; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }

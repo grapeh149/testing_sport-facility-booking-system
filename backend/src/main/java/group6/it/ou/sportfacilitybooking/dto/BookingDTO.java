@@ -1,62 +1,81 @@
 package group6.it.ou.sportfacilitybooking.dto;
 
-import group6.it.ou.sportfacilitybooking.entity.Booking;
+import  java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-/**
- * KHÔNG trả về standalone.
- * Được NHÚNG trong BookingDetailResponse (API-22).
- *
- * Ví dụ JSON trả về (nằm trong bookingDetail):
- * {
- *   "deposit": {
- *     "maDatCoc": 5,
- *     "tienCoc": 100000,
- *     "phuongThucThanhToan": "MOMO",
- *     "tinhTrangThanhToan": "PAID",
- *     "ngayThanhToan": "2026-03-25T10:00:00"
- *   }
- * }
- */
 public class BookingDTO {
-    private Integer maDatCoc;
-    private BigDecimal tienCoc;
-    private String phuongThucThanhToan;
-    private Booking.PaymentStatus tinhTrangThanhToan;
-    private LocalDateTime ngayThanhToan;
+    private Long id;
+    private String bookingCode;
+    private Long customerId;
+    private String customerName;
+    private Long courtId;
+    private String courtName;
+    private String facilityName;
+    private LocalDate bookingDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private BigDecimal totalPrice;
+    private BigDecimal depositAmount;
+    private String status;
+    private String note;
+    private String vnpayUrl;
+    private Boolean hasReview;
 
-    // ---- NoArgs ----
     public BookingDTO() {}
 
-    // ---- AllArgs ----
-    public BookingDTO(Integer maDatCoc, BigDecimal tienCoc, String phuongThucThanhToan,
-                     Booking.PaymentStatus tinhTrangThanhToan, LocalDateTime ngayThanhToan) {
-        this.maDatCoc = maDatCoc;
-        this.tienCoc = tienCoc;
-        this.phuongThucThanhToan = phuongThucThanhToan;
-        this.tinhTrangThanhToan = tinhTrangThanhToan;
-        this.ngayThanhToan = ngayThanhToan;
+    public BookingDTO(Long id, String bookingCode, String status) {
+        this.id = id;
+        this.bookingCode = bookingCode;
+        this.status = status;
     }
 
-    // ---- Getters ----
-    public Integer getMaDatCoc() { return maDatCoc; }
-    public BigDecimal getTienCoc() { return tienCoc; }
-    public String getPhuongThucThanhToan() { return phuongThucThanhToan; }
-    public Booking.PaymentStatus getTinhTrangThanhToan() { return tinhTrangThanhToan; }
-    public LocalDateTime getNgayThanhToan() { return ngayThanhToan; }
+    // Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    // ---- Setters ----
-    public void setMaDatCoc(Integer maDatCoc) { this.maDatCoc = maDatCoc; }
-    public void setTienCoc(BigDecimal tienCoc) { this.tienCoc = tienCoc; }
-    public void setPhuongThucThanhToan(String phuongThucThanhToan) {
-        this.phuongThucThanhToan = phuongThucThanhToan;
-    }
-    public void setTinhTrangThanhToan(Booking.PaymentStatus tinhTrangThanhToan) {
-        this.tinhTrangThanhToan = tinhTrangThanhToan;
-    }
-    public void setNgayThanhToan(LocalDateTime ngayThanhToan) {
-        this.ngayThanhToan = ngayThanhToan;
-    }
+    public String getBookingCode() { return bookingCode; }
+    public void setBookingCode(String bookingCode) { this.bookingCode = bookingCode; }
+
+    public Long getCustomerId() { return customerId; }
+    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public Long getCourtId() { return courtId; }
+    public void setCourtId(Long courtId) { this.courtId = courtId; }
+
+    public String getCourtName() { return courtName; }
+    public void setCourtName(String courtName) { this.courtName = courtName; }
+
+    public String getFacilityName() { return facilityName; }
+    public void setFacilityName(String facilityName) { this.facilityName = facilityName; }
+
+    public LocalDate getBookingDate() { return bookingDate; }
+    public void setBookingDate(LocalDate bookingDate) { this.bookingDate = bookingDate; }
+
+    public LocalTime getStartTime() { return startTime; }
+    public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
+
+    public LocalTime getEndTime() { return endTime; }
+    public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
+
+    public BigDecimal getTotalPrice() { return totalPrice; }
+    public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
+
+    public BigDecimal getDepositAmount() { return depositAmount; }
+    public void setDepositAmount(BigDecimal depositAmount) { this.depositAmount = depositAmount; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
+
+    public String getVnpayUrl() { return vnpayUrl; }
+    public void setVnpayUrl(String vnpayUrl) { this.vnpayUrl = vnpayUrl; }
+
+    public Boolean getHasReview() { return hasReview != null ? hasReview : false; }
+    public void setHasReview(Boolean hasReview) { this.hasReview = hasReview; }
 }
