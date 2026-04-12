@@ -1,11 +1,9 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
 
-import group6.it.ou.sportfacilitybooking.dto.DatSan.CalendarDTO.WeekCalendarDTO;
 import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
 import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
 import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
-import group6.it.ou.sportfacilitybooking.dto.DatSan.DatSanRequest;
 import group6.it.ou.sportfacilitybooking.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

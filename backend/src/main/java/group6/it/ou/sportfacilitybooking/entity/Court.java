@@ -1,52 +1,74 @@
 package group6.it.ou.sportfacilitybooking.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "SanTheThao")
+@Table(name = "courts")
 public class Court {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MaSan")
-    private Integer maSan;
+    private Long id;
 
-    @Column(name = "MaLoaiSan")
-    private String maLoaiSan;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "facility_id", nullable = false)
+    private Facility facility;
 
-    @Column(name = "MaChiNhanh")
-    private Integer maChiNhanh;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sport_type_id", nullable = false)
+    private SportType sportType;
 
-    @Column(name = "SoSan")
-    private Integer soSan;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-    @Column(name = "GhiChu")
-    private String ghiChu;
+    @Column(name = "description", length = 500)
+    private String description;
 
-    @Column(name = "HinhAnh")
-    private String hinhAnh;
+    @Column(name = "surface_type", length = 50)
+    private String surfaceType;
+
+    @Column(name = "is_indoor", nullable = false)
+    private Boolean isIndoor = false;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TimeSlot> timeSlots;
 
     // Getters & Setters
-    public Integer getMaSan() { return maSan; }
-    public void setMaSan(Integer maSan) { this.maSan = maSan; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getMaLoaiSan() { return maLoaiSan; }
-    public void setMaLoaiSan(String maLoaiSan) { this.maLoaiSan = maLoaiSan; }
+    public Facility getFacility() { return facility; }
+    public void setFacility(Facility facility) { this.facility = facility; }
 
-    public Integer getMaChiNhanh() { return maChiNhanh; }
-    public void setMaChiNhanh(Integer maChiNhanh) { this.maChiNhanh = maChiNhanh; }
+    public SportType getSportType() { return sportType; }
+    public void setSportType(SportType sportType) { this.sportType = sportType; }
 
-    public Integer getSoSan() { return soSan; }
-    public void setSoSan(Integer soSan) { this.soSan = soSan; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getGhiChu() { return ghiChu; }
-    public void setGhiChu(String ghiChu) { this.ghiChu = ghiChu; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getHinhAnh() { return hinhAnh; }
-    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
+    public String getSurfaceType() { return surfaceType; }
+    public void setSurfaceType(String surfaceType) { this.surfaceType = surfaceType; }
+
+    public Boolean getIsIndoor() { return isIndoor; }
+    public void setIsIndoor(Boolean isIndoor) { this.isIndoor = isIndoor; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public List<TimeSlot> getTimeSlots() { return timeSlots; }
+    public void setTimeSlots(List<TimeSlot> timeSlots) { this.timeSlots = timeSlots; }
 }

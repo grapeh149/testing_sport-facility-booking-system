@@ -1,31 +1,47 @@
 package group6.it.ou.sportfacilitybooking.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "LoaiSanTheThao")
+@Table(name = "sport_types")
 public class SportType {
 
     @Id
-    @Column(name = "MaLoaiSan")
-    private String maLoaiSan;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @Column(name = "TenLoaiSan")
-    private String tenLoaiSan;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-    @Column(name = "HinhAnh")
-    private String hinhAnh;
+    @Column(name = "description", length = 500)
+    private String description;
+
+    @Column(name = "icon_url", length = 500)
+    private String iconUrl;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     // Getters & Setters
-    public String getMaLoaiSan() { return maLoaiSan; }
-    public void setMaLoaiSan(String maLoaiSan) { this.maLoaiSan = maLoaiSan; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getTenLoaiSan() { return tenLoaiSan; }
-    public void setTenLoaiSan(String tenLoaiSan) { this.tenLoaiSan = tenLoaiSan; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getHinhAnh() { return hinhAnh; }
-    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getIconUrl() { return iconUrl; }
+    public void setIconUrl(String iconUrl) { this.iconUrl = iconUrl; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

@@ -1,49 +1,83 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
+import group6.it.ou.sportfacilitybooking.dto.CourtDTO;
+import group6.it.ou.sportfacilitybooking.dto.CourtCreateRequest;
+import group6.it.ou.sportfacilitybooking.service.CourtService;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import group6.it.ou.sportfacilitybooking.dto.CourtDTO;
-import group6.it.ou.sportfacilitybooking.service.CourtService;
-
 @RestController
-@RequestMapping("/api/santhethao")
+@RequestMapping("/api/courts")
+@CrossOrigin(origins = "*")
 public class CourtController {
-
+    
     @Autowired
-    private CourtService service;
-
-    @GetMapping
-    public List<CourtDTO> getAll() {
-        return service.getAll();
+    private CourtService courtService;
+    
+    @GetMapping("/facility/{facilityId}")
+    public ApiResponse<List<CourtDTO>> getCourtsByFacility(@PathVariable Long facilityId) {
+        try {
+            List<CourtDTO> result = courtService.getCourtsByFacility(facilityId);
+            return new ApiResponse<>(true, result, "Lấy danh sách sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
-
+    
     @GetMapping("/{id}")
-    public CourtDTO getById(@PathVariable Integer id) {
-        return service.getById(id);
+    public ApiResponse<CourtDTO> getCourtDetails(@PathVariable Long id) {
+        try {
+            CourtDTO result = courtService.getCourtDetails(id);
+            return new ApiResponse<>(true, result, "Lấy thông tin sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
-
+    
     @PostMapping
-    public CourtDTO create(@RequestBody CourtDTO dto) {
-        return service.create(dto);
+    public ApiResponse<CourtDTO> createCourt(@Valid @RequestBody CourtCreateRequest request) {
+        try {
+            CourtDTO result = courtService.createCourt(request);
+            return new ApiResponse<>(true, result, "Tạo sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
-
+    
     @PutMapping("/{id}")
-    public CourtDTO update(@PathVariable Integer id, @RequestBody CourtDTO dto) {
-        return service.update(id, dto);
+    public ApiResponse<CourtDTO> updateCourt(@PathVariable Long id, @RequestBody CourtCreateRequest request) {
+        try {
+            CourtDTO result = courtService.updateCourt(id, request);
+            return new ApiResponse<>(true, result, "Cập nhật sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
-        service.delete(id);
+    public ApiResponse<?> deleteCourt(@PathVariable Long id) {
+        try {
+            courtService.deleteCourt(id);
+            return new ApiResponse<>(true, null, "Xóa sân chơi thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
+    }
+
+    // Search courts with filters
+    @GetMapping("/search")
+    public ApiResponse<List<CourtDTO>> searchCourts(
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) Long sportTypeId) {
+        try {
+            List<CourtDTO> result = courtService.searchCourts(address, sportTypeId);
+            return new ApiResponse<>(true, result, "Tìm kiếm sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 }

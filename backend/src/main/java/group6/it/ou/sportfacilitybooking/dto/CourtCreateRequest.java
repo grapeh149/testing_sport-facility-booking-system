@@ -1,26 +1,49 @@
 package group6.it.ou.sportfacilitybooking.dto;
 
-public class CourtCreateRequest {
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-    private Integer maChiNhanh;
-    private String tenChiNhanh;
-    private String diaChi;
-    private String hinhAnh;
-    private String ghiChu;
+public class CourtCreateRequest {
+    @NotNull(message = "ID sân vận động không được để trống")
+    private Long facilityId;
+
+    @NotNull(message = "Loại thể thao không được để trống")
+    private Integer sportTypeId;
+
+    @NotEmpty(message = "Tên sân không được để trống")
+    private String name;
+
+    private String description;
+
+    @NotEmpty(message = "Loại bề mặt không được để trống")
+    private String surfaceType;
+
+    @NotNull(message = "Vị trí trong nhà/ngoài trời không được để trống")
+    private Boolean isIndoor;
+
+    private Boolean isActive;
+
+    public CourtCreateRequest() {}
 
     // Getters & Setters
-    public Integer getMaChiNhanh() { return maChiNhanh; }
-    public void setMaChiNhanh(Integer maChiNhanh) { this.maChiNhanh = maChiNhanh; }
+    public Long getFacilityId() { return facilityId; }
+    public void setFacilityId(Long facilityId) { this.facilityId = facilityId; }
 
-    public String getTenChiNhanh() { return tenChiNhanh; }
-    public void setTenChiNhanh(String tenChiNhanh) { this.tenChiNhanh = tenChiNhanh; }
+    public Integer getSportTypeId() { return sportTypeId; }
+    public void setSportTypeId(Integer sportTypeId) { this.sportTypeId = sportTypeId; }
 
-    public String getDiaChi() { return diaChi; }
-    public void setDiaChi(String diaChi) { this.diaChi = diaChi; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getHinhAnh() { return hinhAnh; }
-    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public String getGhiChu() { return ghiChu; }
-    public void setGhiChu(String ghiChu) { this.ghiChu = ghiChu; }
+    public String getSurfaceType() { return surfaceType; }
+    public void setSurfaceType(String surfaceType) { this.surfaceType = surfaceType; }
+
+    public Boolean getIsIndoor() { return isIndoor; }
+    public void setIsIndoor(Boolean isIndoor) { this.isIndoor = isIndoor; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }

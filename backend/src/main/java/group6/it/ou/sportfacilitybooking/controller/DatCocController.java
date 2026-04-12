@@ -1,7 +1,7 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
 import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
-import group6.it.ou.sportfacilitybooking.dto.DatSan.DatCocRequest;
+// import group6.it.ou.sportfacilitybooking.dto.DatSan.DatCocRequest;
 import group6.it.ou.sportfacilitybooking.service.CheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

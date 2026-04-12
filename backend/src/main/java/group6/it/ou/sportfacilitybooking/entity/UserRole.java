@@ -1,5 +1,7 @@
 package group6.it.ou.sportfacilitybooking.entity;
 
-public class UserRole {
-
+public enum UserRole {
+    CUSTOMER,
+    OWNER,
+    ADMIN
 }

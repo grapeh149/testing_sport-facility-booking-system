@@ -1,41 +1,78 @@
 package group6.it.ou.sportfacilitybooking.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TaiKhoan")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer maTaiKhoan;
-    private String tenTaiKhoan;
-    private String matKhau;
-    private String role;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "maNhanVien")
-    private PaymentStatus nhanVien;
+    @Column(name = "full_name", nullable = false, length = 100)
+    private String fullName;
 
-    @ManyToOne
-    @JoinColumn(name = "maKH")
-    private Payment khachHang;
+    @Column(name = "username", unique = true, length = 50)
+    private String username;
 
-    public Integer getMaTaiKhoan() { return maTaiKhoan; }
-    public void setMaTaiKhoan(Integer maTaiKhoan) { this.maTaiKhoan = maTaiKhoan; }
+    @Column(name = "email", nullable = false, unique = true, length = 150)
+    private String email;
 
-    public String getTenTaiKhoan() { return tenTaiKhoan; }
-    public void setTenTaiKhoan(String tenTaiKhoan) { this.tenTaiKhoan = tenTaiKhoan; }
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
 
-    public String getMatKhau() { return matKhau; }
-    public void setMatKhau(String matKhau) { this.matKhau = matKhau; }
+    @Column(name = "phone", length = 15)
+    private String phone;
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, length = 20)
+    private UserRole role;
 
-    public PaymentStatus getNhanVien() { return nhanVien; }
-    public void setNhanVien(PaymentStatus nhanVien) { this.nhanVien = nhanVien; }
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
 
-    public Payment getKhachHang() { return khachHang; }
-    public void setKhachHang(Payment khachHang) { this.khachHang = khachHang; }
+    @Column(name = "avatar_url", length = 500)
+    private String avatarUrl;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    // Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPasswordHash() { return passwordHash; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public UserRole getRole() { return role; }
+    public void setRole(UserRole role) { this.role = role; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
+
+    public String getAvatarUrl() { return avatarUrl; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
