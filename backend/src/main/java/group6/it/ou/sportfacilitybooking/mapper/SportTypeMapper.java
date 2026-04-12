@@ -1,28 +1,33 @@
 package group6.it.ou.sportfacilitybooking.mapper;
 
 import org.springframework.stereotype.Component;
-
-import group6.it.ou.sportfacilitybooking.dto.SportTypeDTO;
 import group6.it.ou.sportfacilitybooking.entity.SportType;
+import group6.it.ou.sportfacilitybooking.dto.SportTypeDTO;
 
 @Component
 public class SportTypeMapper {
 
-    // Entity → DTO (trả ra ngoài)
     public SportTypeDTO toDTO(SportType entity) {
+        if (entity == null) return null;
+        
         SportTypeDTO dto = new SportTypeDTO();
-        dto.setMaLoaiSan(entity.getMaLoaiSan());
-        dto.setTenLoaiSan(entity.getTenLoaiSan());
-        dto.setHinhAnh(entity.getHinhAnh());
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setDescription(entity.getDescription());
+        dto.setIconUrl(entity.getIconUrl());
+        dto.setIsActive(entity.getIsActive());
         return dto;
     }
 
-    // DTO → Entity (lưu vào DB)
     public SportType toEntity(SportTypeDTO dto) {
+        if (dto == null) return null;
+        
         SportType entity = new SportType();
-        entity.setMaLoaiSan(dto.getMaLoaiSan());
-        entity.setTenLoaiSan(dto.getTenLoaiSan());
-        entity.setHinhAnh(dto.getHinhAnh());
+        entity.setId(dto.getId());
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setIconUrl(dto.getIconUrl());
+        entity.setIsActive(dto.getIsActive());
         return entity;
     }
 }
