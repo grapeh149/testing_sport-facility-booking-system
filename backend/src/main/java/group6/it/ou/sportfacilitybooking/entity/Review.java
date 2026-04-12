@@ -16,11 +16,11 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "maKH")
-    private KhachHang khachHang;
+    private Payment khachHang;
 
     @ManyToOne
     @JoinColumn(name = "maSan")
-    private SanTheThao sanTheThao;
+    private Court sanTheThao;
 
     public Integer getMaReview() { return maReview; }
     public void setMaReview(Integer maReview) { this.maReview = maReview; }
@@ -34,9 +34,9 @@ public class Review {
     public Integer getRating() { return rating; }
     public void setRating(Integer rating) { this.rating = rating; }
 
-    public KhachHang getKhachHang() { return khachHang; }
-    public void setKhachHang(KhachHang khachHang) { this.khachHang = khachHang; }
+    public Payment getKhachHang() { return khachHang; }
+    public void setKhachHang(Payment khachHang) { this.khachHang = khachHang; }
 
-    public SanTheThao getSanTheThao() { return sanTheThao; }
-    public void setSanTheThao(SanTheThao sanTheThao) { this.sanTheThao = sanTheThao; }
+    public Court getSanTheThao() { return sanTheThao; }
+    public void setSanTheThao(Court sanTheThao) { this.sanTheThao = sanTheThao; }
 }
