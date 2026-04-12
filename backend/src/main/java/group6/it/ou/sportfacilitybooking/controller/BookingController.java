@@ -1,90 +1,196 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
+import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
+import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
+import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
 import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
 import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
 import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
 import group6.it.ou.sportfacilitybooking.service.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/dat-san")
+@RequestMapping("/api/bookings")
+@CrossOrigin(origins = "*")
 public class BookingController {
+
+    private static final Logger logger = LoggerFactory.getLogger(BookingController.class);
+
     @Autowired
+    private BookingService bookingService;
 
-    private BookingService datSanService;
+    // Helper method to extract userId from request attributes (set by JwtAuthenticationFilter)
+    private Long extractUserIdFromRequest(HttpServletRequest request) {
+        Object userIdAttr = request.getAttribute("userId");
+        if (userIdAttr != null) {
+            return Long.parseLong(userIdAttr.toString());
+        }
+        return null;
+    }
 
-    // API-20: POST /api/dat-san
-    // Tạm truyền maKH qua query param vì chưa có JWT
+    @GetMapping
+    public ApiResponse<String> getAllBookings() {
+        logger.info("[API] GET /api/bookings - Getting all bookings");
+        return new ApiResponse<>(true, "Use /api/bookings/my-bookings to get your bookings",
+                "Available endpoints: /my-bookings, /{id}");
+    }
+
     @PostMapping
-    public CheckInRequest createBooking(
-            @RequestParam Integer maKH,
-            @RequestBody DatSanRequest request) {
-        return datSanService.createBooking(maKH, request);
+    public ApiResponse<BookingDTO> createBooking(@Valid @RequestBody BookingCreateRequest request,
+                                                 HttpServletRequest httpRequest) {
+        try {
+            Long customerId = extractUserIdFromRequest(httpRequest);
+            logger.info("[API] POST /api/bookings - Creating booking for customer: {}", customerId);
+            BookingDTO result = bookingService.createBooking(request, customerId);
+            logger.info("[API] Booking created successfully: {}", result);
+            return new ApiResponse<>(true, result, "Đặt sân thành công");
+        } catch (Exception e) {
+            logger.error("[API] Failed to create booking: {}", e.getMessage(), e);
+            return new ApiResponse<>(false, null, "Đặt sân thất bại: " + e.getMessage());
+        }
     }
 
-    // API-27: GET /api/dat-san/ca-nhan?maKH=..
-    // Tạm truyền maKH qua query param vì chưa có JWT
-    @GetMapping("/ca-nhan")
-    public List<CheckInDTO> getMyBookings(@RequestParam Integer maKH) {
-        return datSanService.getByMaKH(maKH);
+    @GetMapping("/code/{bookingCode}")
+    public ApiResponse<BookingDTO> getBookingDetails(@PathVariable String bookingCode) {
+        try {
+            BookingDTO result = bookingService.getBookingDetails(bookingCode);
+            return new ApiResponse<>(true, result, "Lấy thông tin đặt sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    // API-22: GET /api/dat-san/chi-tiet/{id}
-    @GetMapping("/chi-tiet/{id}")
-    public CheckInRequest getBookingDetail(@PathVariable("id") Integer maDatSan) {
-        return datSanService.getByMaDatSan(maDatSan);
+    @GetMapping("/my-bookings")
+    public ApiResponse<Map<String, Object>> getMyBookings(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest request) {
+        try {
+            Long customerId = extractUserIdFromRequest(request);
+            logger.info("[API] GET /api/bookings/my-bookings - Customer ID: {}, Page: {}, Size: {}", customerId, page, size);
+
+            Pageable pageable = PageRequest.of(page, size);
+            Page<BookingDTO> result = bookingService.getCustomerBookingHistory(customerId, pageable);
+
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            responseData.put("content", result.getContent());
+            responseData.put("currentPage", result.getNumber());
+            responseData.put("totalPages", result.getTotalPages());
+            responseData.put("totalElements", result.getTotalElements());
+            responseData.put("hasNextPage", result.hasNext());
+            responseData.put("hasPreviousPage", result.hasPrevious());
+
+            return new ApiResponse<>(true, responseData, "Lấy lịch sử đặt sân thành công");
+        } catch (Exception e) {
+            logger.error("[API] Failed to get bookings: {}", e.getMessage());
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    // API-23: PATCH /api/dat-san/{id}/huy
-    @PatchMapping("/{id}/huy")
-    public BookingCreateRequest cancelBooking(@PathVariable("id") Integer maDatSan) {
-        return datSanService.cancelByCustomer(maDatSan);
+    @GetMapping("/owner/pending-bookings")
+    public ApiResponse<Map<String, Object>> getOwnerPendingBookings(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest request) {
+        try {
+            Long ownerId = extractUserIdFromRequest(request);
+            logger.info("[API] GET /api/bookings/owner/pending-bookings - Owner ID: {}, Page: {}, Size: {}", ownerId, page, size);
+
+            Pageable pageable = PageRequest.of(page, size);
+            Page<BookingDTO> result = bookingService.getOwnerPendingBookings(ownerId, pageable);
+
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            responseData.put("content", result.getContent());
+            responseData.put("currentPage", result.getNumber());
+            responseData.put("totalPages", result.getTotalPages());
+            responseData.put("totalElements", result.getTotalElements());
+            responseData.put("hasNextPage", result.hasNext());
+            responseData.put("hasPreviousPage", result.hasPrevious());
+
+            return new ApiResponse<>(true, responseData, "Lấy danh sách đơn cần duyệt thành công");
+        } catch (Exception e) {
+            logger.error("[API] Failed to get pending bookings: {}", e.getMessage());
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    // API-24: PATCH /api/dat-san/{id}/xac-nhan
-    @PatchMapping("/{id}/xac-nhan")
-    public BookingCreateRequest confirmBooking(@PathVariable("id") Integer maDatSan) {
-        return datSanService.confirmBooking(maDatSan);
+    @GetMapping("/owner/all-bookings")
+    public ApiResponse<Map<String, Object>> getOwnerAllBookings(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "100") int size,
+            HttpServletRequest request) {
+        try {
+            Long ownerId = extractUserIdFromRequest(request);
+            logger.info("[API] GET /api/bookings/owner/all-bookings - Owner ID: {}, Page: {}, Size: {}", ownerId, page, size);
+
+            Pageable pageable = PageRequest.of(page, size);
+            Page<BookingDTO> result = bookingService.getOwnerAllBookings(ownerId, pageable);
+
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            responseData.put("content", result.getContent());
+            responseData.put("currentPage", result.getNumber());
+            responseData.put("totalPages", result.getTotalPages());
+            responseData.put("totalElements", result.getTotalElements());
+            responseData.put("hasNextPage", result.hasNext());
+            responseData.put("hasPreviousPage", result.hasPrevious());
+
+            return new ApiResponse<>(true, responseData, "Lấy danh sách tất cả đơn đặt thành công");
+        } catch (Exception e) {
+            logger.error("[API] Failed to get all owner bookings: {}", e.getMessage());
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    // API-25: PATCH /api/dat-san/{id}/tu-choi
-    @PatchMapping("/{id}/tu-choi")
-    public BookingCreateRequest rejectBooking(@PathVariable("id") Integer maDatSan) {
-        return datSanService.rejectBooking(maDatSan);
+    @GetMapping("/{id}")
+    public ApiResponse<BookingDTO> getBookingById(@PathVariable Long id) {
+        try {
+            BookingDTO result = bookingService.getBookingById(id);
+            return new ApiResponse<>(true, result, "Lấy thông tin đặt sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    // API-26: POST /api/dat-san/{id}/checkin
-    @PatchMapping("/{id}/checkin")
-    public BookingCreateRequest checkinBooking(@PathVariable("id") Integer maDatSan) {
-        return datSanService.completeBooking(maDatSan);
+    @PostMapping("/{id}/confirm")
+    public ApiResponse<BookingDTO> confirmBooking(@PathVariable Long id, @RequestParam Long ownerId) {
+        try {
+            BookingDTO result = bookingService.confirmBooking(id, ownerId);
+            return new ApiResponse<>(true, result, "Xác nhận đặt sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    // DELETE /api/dat-san/{id}
+    @PostMapping("/{id}/cancel")
+    public ApiResponse<BookingDTO> cancelBookingPost(@PathVariable Long id, @RequestParam(required = false) String reason) {
+        try {
+            BookingDTO result = bookingService.cancelBooking(id, reason != null ? reason : "");
+            return new ApiResponse<>(true, result, "Hủy đặt sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void hardDeleteBooking(@PathVariable("id") Integer maDatSan) {
-        datSanService.hardDeleteBooking(maDatSan);
+    public ApiResponse<BookingDTO> cancelBooking(@PathVariable Long id) {
+        try {
+            BookingDTO result = bookingService.cancelBooking(id, "");
+            return new ApiResponse<>(true, result, "Hủy đặt sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
-
-    // API-2x: GET /api/dat-san/chi-nhanh/{facilityId}/danh-sach-dat-san
-    @GetMapping("/chi-nhanh/{facilityId}/danh-sach-dat-san")
-    public List<CheckInDTO> getBookingsByFacility(@PathVariable Integer facilityId) {
-        return datSanService.getByMaChiNhanh(facilityId);
-    }
-
-    @GetMapping("/lich")
-    public WeekCalendarDTO getWeeklyCalendar(
-            @RequestParam Integer maSan,
-            @RequestParam(defaultValue = "1") Integer week) {
-        return datSanService.getWeeklyCalendar(maSan, week);
-    }
-
-
-
-
 }

@@ -1,49 +1,68 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
+import group6.it.ou.sportfacilitybooking.dto.TimeSlotDTO;
+import group6.it.ou.sportfacilitybooking.service.TimeSlotService;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import group6.it.ou.sportfacilitybooking.dto.KhachHangDTO;
-import group6.it.ou.sportfacilitybooking.service.KhachHangService;
-
 @RestController
-@RequestMapping("/api/khachhang")
+@RequestMapping("/api/timeslots")
+@CrossOrigin(origins = "*")
 public class TimeSlotController {
 
     @Autowired
-    private KhachHangService service;
+    private TimeSlotService timeSlotService;
 
     @GetMapping
-    public List<KhachHangDTO> getAll() {
-        return service.getAll();
+    public ApiResponse<List<TimeSlotDTO>> getAllTimeSlots() {
+        try {
+            List<TimeSlotDTO> result = timeSlotService.getAllTimeSlots();
+            return new ApiResponse<>(true, result, "Lấy danh sách giờ hoạt động thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    @GetMapping("/{id}")
-    public KhachHangDTO getById(@PathVariable Integer id) {
-        return service.getById(id);
+    @GetMapping("/court/{courtId}")
+    public ApiResponse<List<TimeSlotDTO>> getTimeSlotsByCourtId(@PathVariable Long courtId) {
+        try {
+            List<TimeSlotDTO> result = timeSlotService.getTimeSlotsByCourtId(courtId);
+            return new ApiResponse<>(true, result, "Lấy giờ hoạt động thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
     @PostMapping
-    public KhachHangDTO create(@RequestBody KhachHangDTO dto) {
-        return service.create(dto);
+    public ApiResponse<TimeSlotDTO> createTimeSlot(@RequestBody TimeSlotDTO dto) {
+        try {
+            TimeSlotDTO result = timeSlotService.createTimeSlot(dto);
+            return new ApiResponse<>(true, result, "Tạo giờ hoạt động thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public KhachHangDTO update(@PathVariable Integer id, @RequestBody KhachHangDTO dto) {
-        return service.update(id, dto);
+    public ApiResponse<TimeSlotDTO> updateTimeSlot(@PathVariable Long id, @RequestBody TimeSlotDTO dto) {
+        try {
+            TimeSlotDTO result = timeSlotService.updateTimeSlot(id, dto);
+            return new ApiResponse<>(true, result, "Cập nhật giờ hoạt động thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
-        service.delete(id);
+    public ApiResponse<?> deleteTimeSlot(@PathVariable Long id) {
+        try {
+            timeSlotService.deleteTimeSlot(id);
+            return new ApiResponse<>(true, null, "Xóa giờ hoạt động thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 }

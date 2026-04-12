@@ -1,49 +1,40 @@
 package group6.it.ou.sportfacilitybooking.mapper;
 
-import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
-import group6.it.ou.sportfacilitybooking.dto.DatSan.DatCocRequest;
-import group6.it.ou.sportfacilitybooking.entity.Booking;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
+import group6.it.ou.sportfacilitybooking.entity.CheckIn;
+import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
+import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
 
 @Component
 public class CheckInMapper {
-    /**
-     * Request → Entity (tạo cọc mới khi booking)
-     * - tinhTrangThanhToan mặc định = PENDING (chưa xác nhận)
-     * - ngayThanhToan = null (chưa thanh toán xong)
-     * - thongTinDatSan sẽ được set ở Service sau khi lưu booking
-     */
-    public Booking toEntity(DatCocRequest request) {
-        Booking entity = new Booking();
-        entity.setTienCoc(request.getTienCoc());
-        entity.setPhuongThucThanhToan(request.getPhuongThucThanhToan());
-        entity.setTinhTrangThanhToan(Booking.PaymentStatus.PENDING); // mặc định
-        entity.setNgayThanhToan(null);                        // chưa thanh toán
+
+    public CheckInDTO toDTO(CheckIn entity) {
+        if (entity == null) return null;
+
+        CheckInDTO dto = new CheckInDTO();
+        dto.setId(entity.getId());
+        dto.setBookingId(entity.getBooking().getId());
+        dto.setCheckedByUserId(entity.getCheckedByUser().getId());
+        dto.setCheckedInAt(entity.getCheckedInAt());
+        dto.setNote(entity.getNote());
+        return dto;
+    }
+
+    public CheckIn toEntity(CheckInDTO dto) {
+        if (dto == null) return null;
+
+        CheckIn entity = new CheckIn();
+        entity.setId(dto.getId());
+        entity.setCheckedInAt(dto.getCheckedInAt());
+        entity.setNote(dto.getNote());
         return entity;
     }
 
-    /**
-     * Entity → Response (nhúng vào BookingDetailResponse)
-     */
-    public BookingDTO toResponse(Booking entity) {
-        if (entity == null) return null; // booking chưa có cọc
-        return new BookingDTO(
-                entity.getMaDatCoc(),
-                entity.getTienCoc(),
-                entity.getPhuongThucThanhToan(),
-                entity.getTinhTrangThanhToan(),
-                entity.getNgayThanhToan()
-        );
-    }
+    public CheckIn toEntity(CheckInRequest request) {
+        if (request == null) return null;
 
-    /**
-     * Cập nhật trạng thái thanh toán thành PAID
-     * Gọi khi xác nhận thanh toán thành công
-     */
-    public void markAsPaid(Booking entity) {
-        entity.setTinhTrangThanhToan(Booking.PaymentStatus.PAID);
-        entity.setNgayThanhToan(LocalDateTime.now());
+        CheckIn entity = new CheckIn();
+        entity.setNote(request.getNote());
+        return entity;
     }
 }

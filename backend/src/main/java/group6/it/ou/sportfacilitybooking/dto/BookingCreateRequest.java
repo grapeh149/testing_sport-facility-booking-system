@@ -1,40 +1,28 @@
 package group6.it.ou.sportfacilitybooking.dto;
 
+import java.time.LocalDate;
 
-import group6.it.ou.sportfacilitybooking.entity.BookingStatus;
+import jakarta.validation.constraints.NotNull;
 
-/**
- * Dùng cho các PATCH thay đổi trạng thái:
- *   PATCH /api/bookings/{id}/cancel   (API-23)
- *   PATCH /api/bookings/{id}/confirm  (API-24)
- *   PATCH /api/bookings/{id}/reject   (API-25)
- *   POST  /api/bookings/{id}/checkin  (API-26)
- *
- * Trả về gọn: chỉ xác nhận maDatSan + status mới + message.
- */
 public class BookingCreateRequest {
-    private Integer maDatSan;
-    private BookingStatus.BookingStatus status;
-    private String message;
+    @NotNull(message = "ID sân không được để trống")
+    private Long courtId;
 
-    // ---- NoArgs ----
+    @NotNull(message = "ID khung giờ không được để trống")
+    private Long timeSlotId;
+
+    @NotNull(message = "Ngày đặt không được để trống")
+    private LocalDate bookingDate;
+
     public BookingCreateRequest() {}
 
-    // ---- AllArgs ----
-    public BookingCreateRequest(Integer maDatSan, BookingStatus.BookingStatus status, String message) {
-        this.maDatSan = maDatSan;
-        this.status = status;
-        this.message = message;
-    }
+    // Getters & Setters
+    public Long getCourtId() { return courtId; }
+    public void setCourtId(Long courtId) { this.courtId = courtId; }
 
-    // ---- Getters ----
-    public Integer getMaDatSan() { return maDatSan; }
-    public BookingStatus.BookingStatus getStatus() { return status; }
-    public String getMessage() { return message; }
+    public Long getTimeSlotId() { return timeSlotId; }
+    public void setTimeSlotId(Long timeSlotId) { this.timeSlotId = timeSlotId; }
 
-    // ---- Setters ----
-    public void setMaDatSan(Integer maDatSan) { this.maDatSan = maDatSan; }
-    public void setStatus(BookingStatus.BookingStatus status) { this.status = status; }
-    public void setMessage(String message) { this.message = message; }
-
+    public LocalDate getBookingDate() { return bookingDate; }
+    public void setBookingDate(LocalDate bookingDate) { this.bookingDate = bookingDate; }
 }
