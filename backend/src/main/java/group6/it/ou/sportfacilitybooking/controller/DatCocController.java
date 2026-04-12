@@ -1,8 +1,8 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
-import group6.it.ou.sportfacilitybooking.dto.DatSan.DatCocDTO;
+import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
 import group6.it.ou.sportfacilitybooking.dto.DatSan.DatCocRequest;
-import group6.it.ou.sportfacilitybooking.service.DatCocService;
+import group6.it.ou.sportfacilitybooking.service.CheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.*;
 public class DatCocController {
 
     @Autowired
-    private DatCocService datCocService;
+    private CheckInService datCocService;
 
     // Lấy cọc theo booking
     @GetMapping("/dat-san/{bookingId}/danh-sach-dat-coc")
-    public DatCocDTO getDepositByBooking(@PathVariable("bookingId") Integer maDatSan) {
+    public BookingDTO getDepositByBooking(@PathVariable("bookingId") Integer maDatSan) {
         return datCocService.getByMaDatSan(maDatSan);
     }
 
     // Tạo/retry cọc cho booking
     @PostMapping("/dat-san/{bookingId}/tao-dat-coc")
-    public DatCocDTO createDeposit(
+    public BookingDTO createDeposit(
             @PathVariable("bookingId") Integer maDatSan,
             @RequestBody DatCocRequest request) {
         return datCocService.createDatCoc(maDatSan, request);
@@ -30,13 +30,13 @@ public class DatCocController {
 
     // Đánh dấu thanh toán thành công
     @PatchMapping("/{depositId}/thanh-toan-thanh-cong")
-    public DatCocDTO markDepositPaid(@PathVariable("depositId") Integer maDatCoc) {
+    public BookingDTO markDepositPaid(@PathVariable("depositId") Integer maDatCoc) {
         return datCocService.markAsPaid(maDatCoc);
     }
 
     // Đánh dấu thanh toán thất bại
     @PatchMapping("/{depositId}/thanh-toan-that-bai")
-    public DatCocDTO markDepositFailed(@PathVariable("depositId") Integer maDatCoc) {
+    public BookingDTO markDepositFailed(@PathVariable("depositId") Integer maDatCoc) {
         return datCocService.markAsFailed(maDatCoc);
     }
 

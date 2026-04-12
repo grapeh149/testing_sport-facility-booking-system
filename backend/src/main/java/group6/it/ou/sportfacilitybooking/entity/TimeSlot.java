@@ -24,7 +24,7 @@ public class TimeSlot {
     private BigDecimal giaTien;
 
     @OneToMany(mappedBy = "timeSlot", fetch = FetchType.LAZY)
-    private List<ThongTinDatSan> danhSachDatSan;
+    private List<BookingStatus> danhSachDatSan;
 
     // ==========================================
     // Constructor không tham số (NoArgsConstructor)
@@ -36,7 +36,7 @@ public class TimeSlot {
     // Constructor tất cả tham số (AllArgsConstructor)
     // ==========================================
     public TimeSlot(Integer maGio, LocalTime gioBatDau, LocalTime gioKetThuc,
-                    BigDecimal giaTien, List<ThongTinDatSan> danhSachDatSan) {
+                    BigDecimal giaTien, List<BookingStatus> danhSachDatSan) {
         this.maGio = maGio;
         this.gioBatDau = gioBatDau;
         this.gioKetThuc = gioKetThuc;
@@ -63,7 +63,7 @@ public class TimeSlot {
         return giaTien;
     }
 
-    public List<ThongTinDatSan> getDanhSachDatSan() {
+    public List<BookingStatus> getDanhSachDatSan() {
         return danhSachDatSan;
     }
 
@@ -86,7 +86,7 @@ public class TimeSlot {
         this.giaTien = giaTien;
     }
 
-    public void setDanhSachDatSan(List<ThongTinDatSan> danhSachDatSan) {
+    public void setDanhSachDatSan(List<BookingStatus> danhSachDatSan) {
         this.danhSachDatSan = danhSachDatSan;
     }
 
@@ -102,7 +102,7 @@ public class TimeSlot {
         private LocalTime gioBatDau;
         private LocalTime gioKetThuc;
         private BigDecimal giaTien;
-        private List<ThongTinDatSan> danhSachDatSan;
+        private List<BookingStatus> danhSachDatSan;
 
         public Builder maGio(Integer maGio) {
             this.maGio = maGio;
@@ -124,7 +124,7 @@ public class TimeSlot {
             return this;
         }
 
-        public Builder danhSachDatSan(List<ThongTinDatSan> danhSachDatSan) {
+        public Builder danhSachDatSan(List<BookingStatus> danhSachDatSan) {
             this.danhSachDatSan = danhSachDatSan;
             return this;
         }

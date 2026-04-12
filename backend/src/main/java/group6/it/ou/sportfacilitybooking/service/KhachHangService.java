@@ -8,18 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import group6.it.ou.sportfacilitybooking.dto.KhachHangDTO;
-import group6.it.ou.sportfacilitybooking.entity.KhachHang;
-import group6.it.ou.sportfacilitybooking.mapper.KhachHangMapper;
-import group6.it.ou.sportfacilitybooking.repository.KhachHangRepository;
+import group6.it.ou.sportfacilitybooking.entity.Payment;
+import group6.it.ou.sportfacilitybooking.mapper.UserMapper;
+import group6.it.ou.sportfacilitybooking.repository.UserRepository;
 
 @Service
 public class KhachHangService {
 
     @Autowired
-    private KhachHangRepository repository;
+    private UserRepository repository;
 
     @Autowired
-    private KhachHangMapper mapper;
+    private UserMapper mapper;
 
     // SELECT * FROM KhachHang
     public List<KhachHangDTO> getAll() {
@@ -31,20 +31,20 @@ public class KhachHangService {
 
     // SELECT WHERE MaKH = ?
     public KhachHangDTO getById(Integer id) {
-        KhachHang entity = repository.findById(id)
+        Payment entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy KhachHang với MaKH: " + id));
         return mapper.toDTO(entity);
     }
 
     // INSERT
     public KhachHangDTO create(KhachHangDTO dto) {
-        KhachHang entity = mapper.toEntity(dto);
+        Payment entity = mapper.toEntity(dto);
         return mapper.toDTO(repository.save(entity));
     }
 
     // UPDATE
     public KhachHangDTO update(Integer id, KhachHangDTO dto) {
-        KhachHang entity = repository.findById(id)
+        Payment entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy KhachHang với MaKH: " + id));
         entity.setHo(dto.getHo());
         entity.setTen(dto.getTen());

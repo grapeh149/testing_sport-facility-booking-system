@@ -1,6 +1,6 @@
 package group6.it.ou.sportfacilitybooking.mapper;
 
-import group6.it.ou.sportfacilitybooking.dto.DatSan.TimeSlotDTO;
+import group6.it.ou.sportfacilitybooking.dto.TimeSlotDTO;
 import group6.it.ou.sportfacilitybooking.dto.DatSan.TimeSlotRequest;
 import group6.it.ou.sportfacilitybooking.entity.TimeSlot;
 import org.springframework.stereotype.Component;

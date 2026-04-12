@@ -1,14 +1,14 @@
 package group6.it.ou.sportfacilitybooking.mapper;
 
 import org.springframework.stereotype.Component;
-import group6.it.ou.sportfacilitybooking.dto.TaiKhoanDTO;
-import group6.it.ou.sportfacilitybooking.entity.TaiKhoan;
+import group6.it.ou.sportfacilitybooking.dto.UserDTO;
+import group6.it.ou.sportfacilitybooking.entity.User;
 
 @Component
 public class TaiKhoanMapper {
 
-    public TaiKhoanDTO toDTO(TaiKhoan entity) {
-        TaiKhoanDTO dto = new TaiKhoanDTO();
+    public UserDTO toDTO(User entity) {
+        UserDTO dto = new UserDTO();
         dto.setMaTaiKhoan(entity.getMaTaiKhoan());
         dto.setTenTaiKhoan(entity.getTenTaiKhoan());
         dto.setMatKhau(entity.getMatKhau());
@@ -20,8 +20,8 @@ public class TaiKhoanMapper {
         return dto;
     }
 
-    public TaiKhoan toEntity(TaiKhoanDTO dto) {
-        TaiKhoan entity = new TaiKhoan();
+    public User toEntity(UserDTO dto) {
+        User entity = new User();
         entity.setMaTaiKhoan(dto.getMaTaiKhoan());
         entity.setTenTaiKhoan(dto.getTenTaiKhoan());
         entity.setMatKhau(dto.getMatKhau());
