@@ -1,40 +1,41 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import group6.it.ou.sportfacilitybooking.dto.NhanVienDTO;
-import group6.it.ou.sportfacilitybooking.service.PaymentService;
+
+import jakarta.validation.Valid;
+import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
+import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
+import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
+import group6.it.ou.sportfacilitybooking.service.CheckInService;
 
 @RestController
-@RequestMapping("/api/nhanvien")
+@RequestMapping("/api/checkins")
+@CrossOrigin(origins = "*")
 public class CheckInController {
 
     @Autowired
-    private PaymentService service;
-
-    @GetMapping
-    public List<NhanVienDTO> getAll() {
-        return service.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public NhanVienDTO getById(@PathVariable Integer id) {
-        return service.getById(id);
-    }
+    private CheckInService checkInService;
 
     @PostMapping
-    public NhanVienDTO create(@RequestBody NhanVienDTO dto) {
-        return service.create(dto);
+    public ApiResponse<CheckInDTO> checkIn(@Valid @RequestBody CheckInRequest request,
+                                           @RequestParam Long bookingId,
+                                           @RequestParam Long checkedByUserId) {
+        try {
+            CheckInDTO result = checkInService.checkIn(bookingId, checkedByUserId, request);
+            return new ApiResponse<>(true, result, "Check-in thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    @PutMapping("/{id}")
-    public NhanVienDTO update(@PathVariable Integer id, @RequestBody NhanVienDTO dto) {
-        return service.update(id, dto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
-        service.delete(id);
+    @GetMapping("/booking/{bookingId}")
+    public ApiResponse<CheckInDTO> getCheckInRecord(@PathVariable Long bookingId) {
+        try {
+            CheckInDTO result = checkInService.getCheckInRecord(bookingId);
+            return new ApiResponse<>(true, result, "Lấy thông tin check-in thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 }

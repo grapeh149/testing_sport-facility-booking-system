@@ -1,374 +1,250 @@
 package group6.it.ou.sportfacilitybooking.service;
 
-import group6.it.ou.sportfacilitybooking.dto.DatSan.CalendarDTO.DayCalendarDTO;
-import group6.it.ou.sportfacilitybooking.dto.DatSan.CalendarDTO.SlotStatusDTO;
-import group6.it.ou.sportfacilitybooking.dto.DatSan.CalendarDTO.WeekCalendarDTO;
-import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
-import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
-import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
-import group6.it.ou.sportfacilitybooking.dto.DatSan.DatSanRequest;
-import group6.it.ou.sportfacilitybooking.entity.*;
-import group6.it.ou.sportfacilitybooking.mapper.CheckInMapper;
-import group6.it.ou.sportfacilitybooking.mapper.BookingMapper;
-import group6.it.ou.sportfacilitybooking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
+import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
+import group6.it.ou.sportfacilitybooking.entity.Booking;
+import group6.it.ou.sportfacilitybooking.entity.BookingStatus;
+import group6.it.ou.sportfacilitybooking.entity.Court;
+import group6.it.ou.sportfacilitybooking.entity.TimeSlot;
+import group6.it.ou.sportfacilitybooking.entity.User;
+import group6.it.ou.sportfacilitybooking.entity.Notification;
+import group6.it.ou.sportfacilitybooking.entity.NotificationType;
+import group6.it.ou.sportfacilitybooking.mapper.BookingMapper;
+import group6.it.ou.sportfacilitybooking.repository.BookingRepository;
+import group6.it.ou.sportfacilitybooking.repository.CourtRepository;
+import group6.it.ou.sportfacilitybooking.repository.TimeSlotRepository;
+import group6.it.ou.sportfacilitybooking.repository.UserRepository;
+import group6.it.ou.sportfacilitybooking.repository.NotificationRepository;
+import group6.it.ou.sportfacilitybooking.repository.ReviewRepository;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
+@Transactional
 public class BookingService {
-    @Autowired
-    private BookingRepository datSanRepository;
 
     @Autowired
-    private CheckInRepository datCocRepository;
+    private BookingRepository bookingRepository;
 
     @Autowired
-    private CourtRepository sanTheThaoRepository;
+    private CourtRepository courtRepository;
 
     @Autowired
     private TimeSlotRepository timeSlotRepository;
 
     @Autowired
-    private UserRepository khachHangRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private BookingMapper datSanMapper;
+    private NotificationRepository notificationRepository;
 
     @Autowired
-    private CheckInMapper datCocMapper;
+    private ReviewRepository reviewRepository;
 
-    // Các trạng thái còn "đang hoạt động" (chưa kết thúc)
-    private static final List<BookingStatus.BookingStatus> ACTIVE_STATUSES =
-            List.of(BookingStatus.BookingStatus.PENDING, BookingStatus.BookingStatus.CONFIRMED);
+    @Autowired
+    private BookingMapper bookingMapper;
 
+    public BookingDTO createBooking(BookingCreateRequest request, Long customerId) {
+        User customer = userRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-    // ============================================================
-    // READ
-    // ============================================================
+        Court court = courtRepository.findById(request.getCourtId())
+                .orElseThrow(() -> new RuntimeException("Court not found"));
 
-    // Chi tiết theo maDatSan (API-22)
-    public CheckInRequest getByMaDatSan(Integer maDatSan) {
-        return datSanMapper.toDetailResponse(findOrThrow(maDatSan));
+        TimeSlot timeSlot = timeSlotRepository.findById(request.getTimeSlotId())
+                .orElseThrow(() -> new RuntimeException("TimeSlot not found"));
+
+        // Validate booking date and time
+        LocalDate today = LocalDate.now();
+        if (request.getBookingDate().isBefore(today)) {
+            throw new RuntimeException("Cannot book past dates. Selected date is in the past");
+        }
+
+        // For today bookings, validate that the timeslot hasn't started yet
+        if (request.getBookingDate().isEqual(today)) {
+            LocalTime now = LocalTime.now();
+            LocalTime startTime = timeSlot.getStartTime();
+            if (startTime != null && (startTime.isBefore(now) || startTime.equals(now))) {
+                throw new RuntimeException("Cannot book past or ongoing time slot");
+            }
+        }
+
+        // ✅ NEW: Validate payment time - current datetime must be before booking date + start time
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime bookingDateTime = LocalDateTime.of(request.getBookingDate(), timeSlot.getStartTime());
+
+        System.out.println("🔍 [BookingService] Payment time validation at backend:");
+        System.out.println("   Current: " + now);
+        System.out.println("   Booking DateTime: " + bookingDateTime);
+        System.out.println("   Valid: " + now.isBefore(bookingDateTime));
+
+        if (!now.isBefore(bookingDateTime)) {
+            throw new RuntimeException("Thời gian hiện tại đã vượt quá thời gian đặt sân. Vui lòng chọn thời gian khác");
+        }
+
+        // ⚠️ CRITICAL: Check for double bookings
+        long conflictCount = bookingRepository.countConflictingBookings(
+                request.getCourtId(),
+                request.getBookingDate(),
+                request.getTimeSlotId()
+        );
+
+        if (conflictCount > 0) {
+            throw new RuntimeException("This time slot is already booked");
+        }
+
+        // Generate booking code
+        String bookingCode = generateBookingCode();
+
+        Booking booking = new Booking();
+        booking.setBookingCode(bookingCode);
+        booking.setCustomer(customer);
+        booking.setCourt(court);
+
+        // Get owner_id directly from database - avoid N+1 query and lazy load issues
+        Long ownerId = courtRepository.findOwnerIdByCourtId(court.getId())
+                .orElseThrow(() -> new RuntimeException("Facility owner not found for this court"));
+        booking.setOwnerId(ownerId);
+
+        booking.setTimeSlot(timeSlot);
+        booking.setBookingDate(request.getBookingDate());
+        booking.setStartTime(timeSlot.getStartTime());
+        booking.setEndTime(timeSlot.getEndTime());
+        booking.setTotalPrice(timeSlot.getPrice());
+        booking.setDepositAmount(booking.getTotalPrice().multiply(timeSlot.getDepositRate()).divide(new BigDecimal(100)));
+
+        // Fetch facility to get commission rate (single fetch)
+        BigDecimal commissionRate = court.getFacility().getCommissionRate();
+        booking.setCommissionAmount(booking.getTotalPrice().multiply(commissionRate).divide(new BigDecimal(100)));
+        booking.setStatus(BookingStatus.PENDING_PAYMENT);
+        booking.setCreatedAt(LocalDateTime.now());
+        booking.setUpdatedAt(LocalDateTime.now());
+
+        bookingRepository.save(booking);
+
+        // Create notification for customer
+        createNotification(customer, NotificationType.BOOKING_CREATED,
+                "Đơn đặt sân mới", "Đơn đặt sân " + bookingCode, booking.getId(), "BOOKING");
+
+        return bookingMapper.toDTO(booking);
     }
 
-    // Danh sách theo khách hàng (API-27)
-    public List<CheckInDTO> getByMaKH(Integer maKH) {
-        return datSanRepository.findByKhachHangMaKH(maKH)
-                .stream()
-                .map(datSanMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public BookingDTO confirmBooking(Long bookingId, Long ownerId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (!booking.getCourt().getFacility().getOwner().getId().equals(ownerId)) {
+            throw new RuntimeException("Only facility owner can confirm booking");
+        }
+
+        booking.setStatus(BookingStatus.CONFIRMED);
+        booking.setUpdatedAt(LocalDateTime.now());
+        bookingRepository.save(booking);
+
+        // Create notification
+        createNotification(booking.getCustomer(), NotificationType.BOOKING_CONFIRMED,
+                "Đơn đặt sân đã xác nhận", "Đơn " + booking.getBookingCode(), booking.getId(), "BOOKING");
+
+        return bookingMapper.toDTO(booking);
     }
 
-    // Danh sách theo sân (API-21)
-    public List<CheckInDTO> getByMaSan(Integer maSan) {
-        return datSanRepository.findBySanTheThaoMaSan(maSan)
-                .stream()
-                .map(datSanMapper::toSummaryResponse)
-                .collect(Collectors.toList());
+    public BookingDTO cancelBooking(Long bookingId, String reason) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        booking.setStatus(BookingStatus.CANCELLED);
+        booking.setCancelReason(reason);
+        booking.setCancelledAt(LocalDateTime.now());
+        booking.setUpdatedAt(LocalDateTime.now());
+        bookingRepository.save(booking);
+
+        // Create notification
+        createNotification(booking.getCustomer(), NotificationType.BOOKING_CANCELLED,
+                "Đơn đặt sân đã hủy", "Đơn " + booking.getBookingCode(), booking.getId(), "BOOKING");
+
+        return bookingMapper.toDTO(booking);
     }
 
-    // Danh sách theo chi nhánh (API-27)
-    public List<CheckInDTO> getByMaChiNhanh(Integer maChiNhanh) {
-        return datSanRepository.findBySanTheThaoMaChiNhanh(maChiNhanh)
+    public BookingDTO getBookingById(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        BookingDTO dto = bookingMapper.toDTO(booking);
+        boolean hasReview = reviewRepository.findByBookingId(booking.getId()).isPresent();
+        dto.setHasReview(hasReview);
+        return dto;
+    }
+
+    public BookingDTO getBookingDetails(String bookingCode) {
+        Booking booking = bookingRepository.findByBookingCode(bookingCode)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        return bookingMapper.toDTO(booking);
+    }
+
+    public Page<BookingDTO> getCustomerBookingHistory(Long customerId, Pageable pageable) {
+        return bookingRepository.findByCustomerId(customerId, pageable)
+                .map(booking -> {
+                    BookingDTO dto = bookingMapper.toDTO(booking);
+                    boolean hasReview = reviewRepository.findByBookingId(booking.getId()).isPresent();
+                    dto.setHasReview(hasReview);
+                    return dto;
+                });
+    }
+
+    // Get pending bookings waiting for owner's approval
+    public Page<BookingDTO> getOwnerPendingBookings(Long ownerId, Pageable pageable) {
+        return bookingRepository.findByOwner_IdAndStatus(ownerId, BookingStatus.PENDING_CONFIRM, pageable)
+                .map(bookingMapper::toDTO);
+    }
+
+    // Get all bookings for owner
+    public Page<BookingDTO> getOwnerAllBookings(Long ownerId, Pageable pageable) {
+        return bookingRepository.findByOwnerId(ownerId, pageable)
+                .map(booking -> {
+                    BookingDTO dto = bookingMapper.toDTO(booking);
+                    boolean hasReview = reviewRepository.findByBookingId(booking.getId()).isPresent();
+                    dto.setHasReview(hasReview);
+                    return dto;
+                });
+    }
+
+    // Get bookings by owner and status
+    public Page<BookingDTO> getOwnerBookingsByStatus(Long ownerId, BookingStatus status, Pageable pageable) {
+        return bookingRepository.findByOwner_IdAndStatus(ownerId, status, pageable)
+                .map(bookingMapper::toDTO);
+    }
+
+    // Get all pending approvals (quick count)
+    public java.util.List<BookingDTO> getOwnerPendingApprovalsQuick(Long ownerId) {
+        return bookingRepository.findPendingApprovalsForOwner(ownerId)
                 .stream()
-                .map(datSanMapper::toSummaryResponse)
+                .map(bookingMapper::toDTO)
                 .toList();
     }
 
-
-    // ============================================================
-    // CREATE — đặt sân (API-20)
-    // ============================================================
-    @Transactional
-    public CheckInRequest createBooking(Integer maKH, DatSanRequest request) {
-        LocalDate bookingDate = request.getBookingDate();
-        LocalDate today = LocalDate.now();
-
-        // TC14: bookingDate không được trong quá khứ theo hiện tại
-        if (bookingDate.isBefore(today)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Ngày đặt không được là ngày trong quá khứ.");
-        }
-
-        // TC16/TC17: không vượt quá 30 ngày kể từ hôm nay (đúng 30 ngày vẫn cho)
-        // không được đặt quá xa trong tương lai.
-        if (bookingDate.isAfter(today.plusDays(30))) {
-             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Ngày đặt không được vượt quá 30 ngày kể từ hôm nay.");
-        }
-
-        // Load TimeSlot trước để kiểm tra TC15
-            TimeSlot timeSlot = timeSlotRepository.findById(request.getMaGio())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Không tìm thấy khung giờ với MaGio: " + request.getMaGio()));
-
-        // TC15: đặt hôm nay → giờ hiện tại phải trước gioBatDau
-        if (bookingDate.isEqual(today) && !LocalTime.now().isBefore(timeSlot.getGioBatDau())) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Đặt sân trong ngày hôm nay phải trước giờ bắt đầu của khung giờ ("
-                            + timeSlot.getGioBatDau() + ").");
-
-        }
-
-        // Load SanTheThao
-        Court sanTheThao = sanTheThaoRepository.findById(request.getMaSan())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Không tìm thấy sân với MaSan: " + request.getMaSan()));
-
-        // TC19: sân phải đang Active
-        // TODO: bổ sung khi SanTheThao entity có field trangThai
-        // if (!"ACTIVE".equals(sanTheThao.getTrangThai())) {
-        //  throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Sân không còn hoạt động.");
-        // }
-
-        // TC11/TC12: trùng slot (maSan + maGio + bookingDate) với PENDING/CONFIRMED
-        boolean slotConflict = datSanRepository
-                .existsBySanTheThaoMaSanAndTimeSlotMaGioAndBookingDateAndStatusIn(
-                        request.getMaSan(), request.getMaGio(), bookingDate, ACTIVE_STATUSES);
-        if (slotConflict) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Khung giờ này đã được đặt. Vui lòng chọn khung giờ khác.");
-        }
-
-        // Load KhachHang
-        Payment khachHang = khachHangRepository.findById(maKH)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Không tìm thấy khách hàng với MaKH: " + maKH));
-
-        // TC18: cùng khách hàng, cùng maGio + bookingDate (dù sân khác nhau)
-        // (nếu trùng sân đã bị chặn ở TC11/TC12 → đây chỉ bắt trùng sân khác)
-        // 1 h chỉ cho chơi 1 sân thui
-        boolean customerSlotConflict = datSanRepository
-                .existsByKhachHangMaKHAndTimeSlotMaGioAndBookingDateAndStatusIn(
-                        maKH, request.getMaGio(), bookingDate, ACTIVE_STATUSES);
-        if (customerSlotConflict) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Bạn đã có lịch đặt sân vào cùng khung giờ và ngày này.");
-        }
-
-        // TC20: totalPrice = giaTien từ timeSlot tại thời điểm đặt (mapper set luôn)
-        BookingStatus booking = datSanMapper.toEntity(request, sanTheThao, timeSlot, khachHang);
-        booking = datSanRepository.save(booking);
-
-        // Tạo ThongTinDatCoc nếu request có deposit - có thể gọi riêng  DatCocService bước này
-//        if (request.getDeposit() != null) {
-//            ThongTinDatCoc datCoc = datCocMapper.toEntity(request.getDeposit());
-//            datCoc.setThongTinDatSan(booking);
-//            datCoc = datCocRepository.save(datCoc);
-//            booking.setThongTinDatCoc(datCoc);
-//        }
-
-        return datSanMapper.toDetailResponse(booking);
+    private String generateBookingCode() {
+        return "SB-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
     }
 
-
-    // ============================================================
-    // UPDATE — chuyển trạng thái
-    // ============================================================
-
-    // PENDING → CONFIRMED (Owner/Staff xác nhận — TC43)
-    @Transactional
-    public BookingCreateRequest confirmBooking(Integer maDatSan) {
-        BookingStatus booking = findOrThrow(maDatSan);
-        validateTransition(booking,
-                BookingStatus.BookingStatus.PENDING,
-                BookingStatus.BookingStatus.CONFIRMED);
-        booking.setStatus(BookingStatus.BookingStatus.CONFIRMED);
-        datSanRepository.save(booking);
-        return datSanMapper.toStatusResponse(booking, "Booking đã được xác nhận.");
+    private void createNotification(User user, NotificationType type, String title, String message, Long refId, String refType) {
+        Notification notification = new Notification();
+        notification.setUser(user);
+        notification.setType(type);
+        notification.setTitle(title);
+        notification.setMessage(message);
+        notification.setRefId(refId);
+        notification.setRefType(refType);
+        notification.setIsRead(false);
+        notification.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(notification);
     }
-
-    // PENDING → CANCELLED (Owner/Staff từ chối — TC44)
-    @Transactional
-    public BookingCreateRequest rejectBooking(Integer maDatSan) {
-        BookingStatus booking = findOrThrow(maDatSan);
-        validateTransition(booking,
-                BookingStatus.BookingStatus.PENDING,
-                BookingStatus.BookingStatus.CANCELLED);
-        booking.setStatus(BookingStatus.BookingStatus.CANCELLED);
-        datSanRepository.save(booking);
-        return datSanMapper.toStatusResponse(booking, "Booking đã bị từ chối.");
-    }
-
-    // CONFIRMED → CANCELLED (Khách hàng hủy)
-    @Transactional
-    public BookingCreateRequest cancelByCustomer(Integer maDatSan) {
-        BookingStatus booking = findOrThrow(maDatSan);
-        validateTransition(booking,
-                BookingStatus.BookingStatus.CONFIRMED,
-                BookingStatus.BookingStatus.CANCELLED);
-        booking.setStatus(BookingStatus.BookingStatus.CANCELLED);
-        datSanRepository.save(booking);
-
-        // TC36/TC37/TC38: nếu cọc đã PAID → cần hoàn tiền -
-//        checkAndFlagRefund(booking);
-
-        return datSanMapper.toStatusResponse(booking, "Booking đã bị hủy bởi khách hàng.");
-    }
-
-    // CONFIRMED → COMPLETED (Hệ thống sau check-in)
-    @Transactional
-    public BookingCreateRequest completeBooking(Integer maDatSan) {
-        BookingStatus booking = findOrThrow(maDatSan);
-        validateTransition(booking,
-                BookingStatus.BookingStatus.CONFIRMED,
-                BookingStatus.BookingStatus.COMPLETED);
-        booking.setStatus(BookingStatus.BookingStatus.COMPLETED);
-        datSanRepository.save(booking);
-        return datSanMapper.toStatusResponse(booking, "Booking đã hoàn thành.");
-    }
-
-    // ============================================================
-    // DELETE — soft delete (không xóa vật lý, chuyển về CANCELLED)
-    // ============================================================
-    @Transactional
-    public BookingCreateRequest deleteBooking(Integer maDatSan) {
-        BookingStatus booking = findOrThrow(maDatSan);
-        BookingStatus.BookingStatus current = booking.getStatus();
-
-        // Trạng thái cuối không được xóa
-        if (current == BookingStatus.BookingStatus.CANCELLED
-                || current == BookingStatus.BookingStatus.COMPLETED) {
-             throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Không thể hủy booking ở trạng thái: " + current);
-        }
-
-        booking.setStatus(BookingStatus.BookingStatus.CANCELLED);
-        datSanRepository.save(booking);
-
-        // TC36/TC37/TC38: nếu cọc đã PAID → cần hoàn tiền
-//        checkAndFlagRefund(booking);
-
-        return datSanMapper.toStatusResponse(booking, "Booking đã bị hủy.");
-    }
-
-    // DELETE — hard delete vật lý
-    @Transactional
-    public void hardDeleteBooking(Integer maDatSan) {
-        BookingStatus booking = findOrThrow(maDatSan);
-        // Nếu có cọc → xóa cọc trước để tránh FK constraint
-        if (booking.getThongTinDatCoc() != null) {
-            datCocRepository.delete(booking.getThongTinDatCoc());
-        }
-        datSanRepository.delete(booking);
-    }
-
-    // ============================================================
-    // Helpers
-    // ============================================================
-    private BookingStatus findOrThrow(Integer maDatSan) {
-        return datSanRepository.findById(maDatSan)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Không tìm thấy booking với MaDatSan: " + maDatSan));
-    }
-
-    /**
-     * Kiểm tra luồng chuyển trạng thái hợp lệ.
-     * Quy tắc chung:
-     *  - Không cho quay về PENDING
-     *  - COMPLETED / CANCELLED là trạng thái cuối, không đổi được
-     *  - Phải đúng trạng thái hiện tại mới được chuyển
-     */
-    private void validateTransition(BookingStatus booking,
-                                    BookingStatus.BookingStatus requiredCurrent,
-                                    BookingStatus.BookingStatus target) {
-        BookingStatus.BookingStatus current = booking.getStatus();
-
-        if (target == BookingStatus.BookingStatus.PENDING) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Không được chuyển trạng thái về PENDING.");
-        }
-        if (current == BookingStatus.BookingStatus.COMPLETED
-                || current == BookingStatus.BookingStatus.CANCELLED) {
-             throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "Booking ở trạng thái " + current + " không thể thay đổi.");
-        }
-        if (current != requiredCurrent) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Không thể chuyển từ " + current + " sang " + target
-                            + ". Trạng thái hiện tại phải là " + requiredCurrent + ".");
-        }
-    }
-
-//    /**
-//     * TC36/TC37/TC38: nếu booking bị hủy mà đã có cọc PAID → flag cần hoàn tiền.
-//     * TODO: thay bằng event/notification khi có refund flow thực sự.
-//     */
-//    private void checkAndFlagRefund(ThongTinDatSan booking) {
-//        ThongTinDatCoc datCoc = booking.getThongTinDatCoc();
-//        if (datCoc != null
-//                && ThongTinDatCoc.PaymentStatus.PAID.equals(datCoc.getTinhTrangThanhToan())) {
-//            // TODO: gửi event hoàn tiền hoặc cập nhật flag refund pending
-//        }
-//    }
-
-    @Transactional(readOnly = true)
-    public WeekCalendarDTO getWeeklyCalendar(Integer maSan, Integer week) {
-        if (week == null || week < 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "week phải >= 1.");
-        }
-
-        LocalDate today = LocalDate.now();
-        LocalDate from = today.plusDays((long) (week - 1) * 7);
-        LocalDate to = from.plusDays(6);
-        LocalDate maxDate = today.plusDays(30);
-
-        // Validate không vượt 30 ngày kể từ hôm nay
-        if (from.isAfter(maxDate) || to.isAfter(maxDate)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Tuần yêu cầu vượt quá giới hạn 30 ngày kể từ hôm nay."
-            );
-        }
-
-        // Optional nhưng nên có: maSan tồn tại
-        if (!sanTheThaoRepository.existsById(maSan)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy sân với MaSan: " + maSan);
-        }
-
-        // Bước 1: 1 query [tìm sân khoảng tg 1 tuần]
-        List<BookingStatus> bookings =
-                datSanRepository.findBySanTheThaoMaSanAndBookingDateBetween(maSan, from, to);
-
-        // Bước 2: map in-memory O(n)
-        Map<LocalDate, Map<Integer, String>> bookedMap = new HashMap<>();
-        for (BookingStatus booking : bookings) {
-            LocalDate date = booking.getBookingDate();
-            Integer maGio = booking.getTimeSlot().getMaGio();
-            String status = booking.getStatus().name();
-
-            bookedMap
-                    .computeIfAbsent(date, d -> new HashMap<>())
-                    .put(maGio, status);
-        }
-
-        // Build response: loop 7 ngày
-        List<DayCalendarDTO> days = new ArrayList<>(7);
-        for (int i = 0; i < 7; i++) {
-            LocalDate date = from.plusDays(i);
-            Map<Integer, String> slots = bookedMap.getOrDefault(date, Collections.emptyMap());
-
-            List<SlotStatusDTO> bookedSlots = slots.entrySet().stream()
-                    .sorted(Map.Entry.comparingByKey())
-                    .map(e -> new SlotStatusDTO(e.getKey(), e.getValue()))
-                    .toList();
-
-            days.add(new DayCalendarDTO(date, bookedSlots));
-        }
-
-        return new WeekCalendarDTO(week, from, to, days);
-    }
-
-
-
-
 }
