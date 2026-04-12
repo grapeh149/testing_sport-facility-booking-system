@@ -14,6 +14,9 @@ import jakarta.validation.Valid;
 import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
 import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
 import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
+import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
+import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
+import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
 import group6.it.ou.sportfacilitybooking.service.BookingService;
 
 import java.util.LinkedHashMap;

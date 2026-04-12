@@ -1,18 +1,32 @@
 package group6.it.ou.sportfacilitybooking.dto;
 
 public class SportTypeDTO {
+    private Integer id;
+    private String name;
+    private String description;
+    private String iconUrl;
+    private Boolean isActive;
 
-    private String maLoaiSan;
-    private String tenLoaiSan;
-    private String hinhAnh;
+    public SportTypeDTO() {}
+
+    public SportTypeDTO(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     // Getters & Setters
-    public String getMaLoaiSan() { return maLoaiSan; }
-    public void setMaLoaiSan(String maLoaiSan) { this.maLoaiSan = maLoaiSan; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getTenLoaiSan() { return tenLoaiSan; }
-    public void setTenLoaiSan(String tenLoaiSan) { this.tenLoaiSan = tenLoaiSan; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getHinhAnh() { return hinhAnh; }
-    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getIconUrl() { return iconUrl; }
+    public void setIconUrl(String iconUrl) { this.iconUrl = iconUrl; }
+
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 }
