@@ -7,23 +7,28 @@ import group6.it.ou.sportfacilitybooking.entity.PaymentStatus;
 @Component
 public class PaymentMapper {
 
-    public NhanVienDTO toDTO(PaymentStatus entity) {
-        NhanVienDTO dto = new NhanVienDTO();
-        dto.setMaNhanVien(entity.getMaNhanVien());
-        dto.setHo(entity.getHo());
-        dto.setTen(entity.getTen());
-        dto.setSdt(entity.getSdt());
-        dto.setTitle(entity.getTitle());
+    public PaymentDTO toDTO(Payment entity) {
+        if (entity == null) return null;
+        
+        PaymentDTO dto = new PaymentDTO();
+        dto.setId(entity.getId());
+        dto.setBookingId(entity.getBooking().getId());
+        dto.setVnpayTxnRef(entity.getVnpayTxnRef());
+        dto.setAmount(entity.getAmount());
+        dto.setPaymentType(entity.getPaymentType().toString());
+        dto.setStatus(entity.getStatus().toString());
+        dto.setBankCode(entity.getBankCode());
         return dto;
     }
 
-    public PaymentStatus toEntity(NhanVienDTO dto) {
-        PaymentStatus entity = new PaymentStatus();
-        entity.setMaNhanVien(dto.getMaNhanVien());
-        entity.setHo(dto.getHo());
-        entity.setTen(dto.getTen());
-        entity.setSdt(dto.getSdt());
-        entity.setTitle(dto.getTitle());
+    public Payment toEntity(PaymentDTO dto) {
+        if (dto == null) return null;
+        
+        Payment entity = new Payment();
+        entity.setId(dto.getId());
+        entity.setVnpayTxnRef(dto.getVnpayTxnRef());
+        entity.setAmount(dto.getAmount());
+        entity.setBankCode(dto.getBankCode());
         return entity;
     }
 }

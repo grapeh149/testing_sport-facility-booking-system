@@ -8,25 +8,44 @@ import group6.it.ou.sportfacilitybooking.entity.Payment;
 @Component
 public class UserMapper {
 
-    // Entity → DTO (trả ra ngoài)
-    public KhachHangDTO toDTO(Payment entity) {
-        KhachHangDTO dto = new KhachHangDTO();
-        dto.setMaKH(entity.getMaKH());
-        dto.setHo(entity.getHo());
-        dto.setTen(entity.getTen());
-        dto.setSdt(entity.getSdt());
-        dto.setEmail(entity.getEmail());
+    public UserDTO toDTO(User user) {
+        if (user == null) return null;
+        
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setFullName(user.getFullName());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPhone(user.getPhone());
+        dto.setRole(user.getRole().toString());
+        dto.setIsActive(user.getIsActive());
+        dto.setAvatarUrl(user.getAvatarUrl());
+        dto.setCreatedAt(user.getCreatedAt());
+        dto.setStatus(user.getIsActive() ? "ACTIVE" : "BLOCKED");
         return dto;
     }
 
-    // DTO → Entity (lưu vào DB)
-    public Payment toEntity(KhachHangDTO dto) {
-        Payment entity = new Payment();
-        entity.setMaKH(dto.getMaKH());
-        entity.setHo(dto.getHo());
-        entity.setTen(dto.getTen());
-        entity.setSdt(dto.getSdt());
-        entity.setEmail(dto.getEmail());
-        return entity;
+    public User toEntity(UserDTO dto) {
+        if (dto == null) return null;
+        
+        User user = new User();
+        user.setId(dto.getId());
+        user.setFullName(dto.getFullName());
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setIsActive(dto.getIsActive());
+        user.setAvatarUrl(dto.getAvatarUrl());
+        return user;
+    }
+
+    public User toEntity(UserRegistrationRequest request) {
+        if (request == null) return null;
+        
+        User user = new User();
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        return user;
     }
 }
