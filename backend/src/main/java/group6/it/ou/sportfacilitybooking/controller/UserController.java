@@ -73,4 +73,8 @@ public class UserController {
     public boolean checkEmailExists(@PathVariable String email) {
         return service.existsByEmail(email);
     }
+    @PostMapping("/{id}/change-password")
+    public void changePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequest request) {
+        service.changePassword(id, request);
+    } 
 }
