@@ -154,4 +154,29 @@ public class UserService {
     public boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
+    // ĐỔI MẬT KHẨU
+    public void changePassword(Long id, UpdatePasswordRequest request) {
+        // Kiểm tra mật khẩu mới và confirm password có khớp không
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Mật khẩu mới và xác nhận mật khẩu không khớp");
+        }
+    
+        // Kiểm tra mật khẩu mới có trống không
+        if (request.getNewPassword() == null || request.getNewPassword().trim().isEmpty()) {
+            throw new RuntimeException("Mật khẩu mới không được để trống");
+        }
+    
+        User entity = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy User với id: " + id));
+    
+        // Kiểm tra mật khẩu hiện tại có đúng không
+        if (!passwordEncoder.matches(request.getCurrentPassword(), entity.getPasswordHash())) {
+            throw new RuntimeException("Mật khẩu hiện tại không đúng");
+        }
+    
+        // Cập nhật mật khẩu mới
+        entity.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        entity.setUpdatedAt(LocalDateTime.now());
+        repository.save(entity);
+    }
 }
