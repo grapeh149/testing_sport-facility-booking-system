@@ -4,12 +4,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import group6.it.ou.sportfacilitybooking.dto.UserDTO;
+import group6.it.ou.sportfacilitybooking.request.UserLoginRequest;
+import group6.it.ou.sportfacilitybooking.request.UserRegisterRequest;
 import group6.it.ou.sportfacilitybooking.service.UserService;
 
 @RestController
-@RequestMapping("/api/taikhoan")
+@RequestMapping("/api/users")
 public class UserController {
-
     @Autowired
     private UserService service;
 
@@ -19,13 +20,18 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDTO getById(@PathVariable Integer id) {
+    public UserDTO getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
-    @GetMapping("/username/{tenTaiKhoan}")
-    public UserDTO getByTenTaiKhoan(@PathVariable String tenTaiKhoan) {
-        return service.getByTenTaiKhoan(tenTaiKhoan);
+    @GetMapping("/username/{username}")
+    public UserDTO getByUsername(@PathVariable String username) {
+        return service.getByUsername(username);
+    }
+
+    @GetMapping("/email/{email}")
+    public UserDTO getByEmail(@PathVariable String email) {
+        return service.getByEmail(email);
     }
 
     @GetMapping("/role/{role}")
@@ -39,21 +45,32 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserDTO update(@PathVariable Integer id, @RequestBody UserDTO dto) {
+    public UserDTO update(@PathVariable Long id, @RequestBody UserDTO dto) {
         return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
-        @PostMapping("/dang-ky")
-    public UserDTO dangKy(@RequestBody UserDTO dto) {
-        return service.dangKy(dto);
+
+    @PostMapping("/register")
+    public UserDTO register(@RequestBody UserRegisterRequest request) {
+        return service.register(request);
     }
 
-    @PostMapping("/dang-nhap")
-    public UserDTO dangNhap(@RequestBody UserDTO dto) {
-        return service.dangNhap(dto);
+    @PostMapping("/login")
+    public UserDTO login(@RequestBody UserLoginRequest request) {
+        return service.login(request);
+    }
+
+    @GetMapping("/check-username/{username}")
+    public boolean checkUsernameExists(@PathVariable String username) {
+        return service.existsByUsername(username);
+    }
+
+    @GetMapping("/check-email/{email}")
+    public boolean checkEmailExists(@PathVariable String email) {
+        return service.existsByEmail(email);
     }
 }
