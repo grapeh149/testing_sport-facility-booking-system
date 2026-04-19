@@ -13,6 +13,7 @@ import group6.it.ou.sportfacilitybooking.mapper.UserMapper;
 import group6.it.ou.sportfacilitybooking.repository.UserRepository;
 import group6.it.ou.sportfacilitybooking.request.UserLoginRequest;
 import group6.it.ou.sportfacilitybooking.request.UserRegisterRequest;
+import group6.it.ou.sportfacilitybooking.request.UpdatePasswordRequest;
 
 @Service
 public class UserService {
