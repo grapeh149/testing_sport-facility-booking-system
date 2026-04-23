@@ -11,14 +11,12 @@ import group6.it.ou.sportfacilitybooking.repository.ReviewRepository;
 
 @Service
 public class ReviewService {
-
     @Autowired
     private ReviewRepository repository;
 
     @Autowired
     private ReviewMapper mapper;
 
-    // SELECT * FROM Review
     public List<ReviewDTO> getAll() {
         return repository.findAll()
                 .stream()
@@ -26,47 +24,47 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    // SELECT WHERE MaReview = ?
-    public ReviewDTO getById(Integer id) {
+    public ReviewDTO getById(Long id) {
         Review entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy Review với MaReview: " + id));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Review với id: " + id));
         return mapper.toDTO(entity);
     }
 
-    // SELECT WHERE MaSan = ?
-    public List<ReviewDTO> getBySan(Integer maSan) {
-        return repository.findBySanTheThao_MaSan(maSan)
+    public List<ReviewDTO> getByFacility(Long facilityId) {
+        return repository.findByFacility_Id(facilityId)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    // SELECT WHERE MaKH = ?
-    public List<ReviewDTO> getByKhachHang(Integer maKH) {
-        return repository.findByKhachHang_MaKH(maKH)
+    public List<ReviewDTO> getByUser(Long userId) {
+        return repository.findByUser_Id(userId)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    // INSERT
+    public List<ReviewDTO> getByBooking(Long bookingId) {
+        return repository.findByBooking_Id(bookingId)
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public ReviewDTO create(ReviewDTO dto) {
         Review entity = mapper.toEntity(dto);
         return mapper.toDTO(repository.save(entity));
     }
 
-    // UPDATE
-    public ReviewDTO update(Integer id, ReviewDTO dto) {
+    public ReviewDTO update(Long id, ReviewDTO dto) {
         Review entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy Review với MaReview: " + id));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Review với id: " + id));
         entity.setComment(dto.getComment());
         entity.setRating(dto.getRating());
-        entity.setReviewDate(dto.getReviewDate());
         return mapper.toDTO(repository.save(entity));
     }
 
-    // DELETE
-    public void delete(Integer id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }
