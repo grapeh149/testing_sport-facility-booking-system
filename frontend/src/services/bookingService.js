@@ -20,6 +20,11 @@ const bookingService = {
     return apiClient.get(`/api/bookings/${id}`);
   },
 
+  // Lấy lịch đặt sân công khai theo courtId
+  getCourtBookings: (courtId) => {
+    return apiClient.get(`/api/bookings/court/${courtId}`);
+  },
+
   // Tạo booking (yêu cầu authentication)
   createBooking: (data) => {
     return apiClient.post('/api/bookings', data);
