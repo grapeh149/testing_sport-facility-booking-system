@@ -1,80 +1,95 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
 import group6.it.ou.sportfacilitybooking.dto.UserDTO;
-import group6.it.ou.sportfacilitybooking.request.UserLoginRequest;
-import group6.it.ou.sportfacilitybooking.request.UserRegisterRequest;
+import group6.it.ou.sportfacilitybooking.dto.UserRegistrationRequest;
 import group6.it.ou.sportfacilitybooking.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 public class UserController {
+    
     @Autowired
-    private UserService service;
-
-    @GetMapping
-    public List<UserDTO> getAll() {
-        return service.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public UserDTO getById(@PathVariable Long id) {
-        return service.getById(id);
-    }
-
-    @GetMapping("/username/{username}")
-    public UserDTO getByUsername(@PathVariable String username) {
-        return service.getByUsername(username);
-    }
-
-    @GetMapping("/email/{email}")
-    public UserDTO getByEmail(@PathVariable String email) {
-        return service.getByEmail(email);
-    }
-
-    @GetMapping("/role/{role}")
-    public List<UserDTO> getByRole(@PathVariable String role) {
-        return service.getByRole(role);
-    }
-
+    private UserService userService;
+    
     @PostMapping
-    public UserDTO create(@RequestBody UserDTO dto) {
-        return service.create(dto);
+    public ApiResponse<UserDTO> createUser(@Valid @RequestBody UserRegistrationRequest request) {
+        try {
+            UserDTO result = userService.createUser(request);
+            return new ApiResponse<>(true, result, "Tạo người dùng thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
-
+    
+    @GetMapping("/{id}")
+    public ApiResponse<UserDTO> getProfile(@PathVariable Long id) {
+        try {
+            UserDTO result = userService.getUserProfile(id);
+            return new ApiResponse<>(true, result, "Lấy thông tin thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
+    }
+    
     @PutMapping("/{id}")
-    public UserDTO update(@PathVariable Long id, @RequestBody UserDTO dto) {
-        return service.update(id, dto);
+    public ApiResponse<UserDTO> updateProfile(@PathVariable Long id, @RequestBody UserDTO dto) {
+        try {
+            UserDTO result = userService.updateUserProfile(id, dto);
+            return new ApiResponse<>(true, result, "Cập nhật thông tin thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
-
+    
+    @GetMapping
+    public ApiResponse<Page<UserDTO>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<UserDTO> result = userService.getAllUsers(pageable);
+            return new ApiResponse<>(true, result, "Lấy danh sách người dùng thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
+    }
+    
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    public ApiResponse<?> deactivateUser(@PathVariable Long id) {
+        try {
+            userService.deactivateUser(id);
+            return new ApiResponse<>(true, null, "Tài khoản đã bị vô hiệu hóa");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    @PostMapping("/register")
-    public UserDTO register(@RequestBody UserRegisterRequest request) {
-        return service.register(request);
+    @PutMapping("/{id}/lock")
+    public ApiResponse<?> lockUser(@PathVariable Long id) {
+        try {
+            userService.deactivateUser(id);
+            return new ApiResponse<>(true, null, "Khóa tài khoản thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
 
-    @PostMapping("/login")
-    public UserDTO login(@RequestBody UserLoginRequest request) {
-        return service.login(request);
+    @PutMapping("/{id}/unlock")
+    public ApiResponse<?> unlockUser(@PathVariable Long id) {
+        try {
+            userService.activateUser(id);
+            return new ApiResponse<>(true, null, "Mở khóa tài khoản thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
     }
-
-    @GetMapping("/check-username/{username}")
-    public boolean checkUsernameExists(@PathVariable String username) {
-        return service.existsByUsername(username);
-    }
-
-    @GetMapping("/check-email/{email}")
-    public boolean checkEmailExists(@PathVariable String email) {
-        return service.existsByEmail(email);
-    }
-    @PostMapping("/{id}/change-password")
-    public void changePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequest request) {
-        service.changePassword(id, request);
-    } 
 }

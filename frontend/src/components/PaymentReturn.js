@@ -80,7 +80,7 @@ const PaymentReturn = () => {
 
           <div className="d-flex gap-2">
             <Link to="/my-bookings" className="w-100">
-              <Button variant="primary" className="w-100">Về Trang đặt sân của tôi</Button>
+              <Button variant="primary" className="w-100">Về Đặt Sân Của Tôi</Button>
             </Link>
             <Link to="/" className="w-100">
               <Button variant="outline-secondary" className="w-100">Về Trang Chủ</Button>

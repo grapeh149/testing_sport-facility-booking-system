@@ -10,17 +10,12 @@ public class PaymentDTO {
     private String paymentType;
     private String status;
     private String bankCode;
-    private LocalDateTime paidAt;
-    private LocalDateTime createdAt;
-    private String description;
-    private String transactionRef;
 
     public PaymentDTO() {}
 
-    public PaymentDTO(Long id, Long bookingId, BigDecimal amount) {
+    public PaymentDTO(Long id, String status) {
         this.id = id;
-        this.bookingId = bookingId;
-        this.amount = amount;
+        this.status = status;
     }
 
     // Getters & Setters
@@ -33,9 +28,6 @@ public class PaymentDTO {
     public String getVnpayTxnRef() { return vnpayTxnRef; }
     public void setVnpayTxnRef(String vnpayTxnRef) { this.vnpayTxnRef = vnpayTxnRef; }
 
-    public String getVnpayTxnNo() { return vnpayTxnNo; }
-    public void setVnpayTxnNo(String vnpayTxnNo) { this.vnpayTxnNo = vnpayTxnNo; }
-
     public BigDecimal getAmount() { return amount; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
 
@@ -45,21 +37,6 @@ public class PaymentDTO {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public String getPaymentMethod() { return paymentMethod; }
-    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
-
     public String getBankCode() { return bankCode; }
     public void setBankCode(String bankCode) { this.bankCode = bankCode; }
-
-    public LocalDateTime getPaidAt() { return paidAt; }
-    public void setPaidAt(LocalDateTime paidAt) { this.paidAt = paidAt; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public String getTransactionRef() { return transactionRef; }
-    public void setTransactionRef(String transactionRef) { this.transactionRef = transactionRef; }
 }

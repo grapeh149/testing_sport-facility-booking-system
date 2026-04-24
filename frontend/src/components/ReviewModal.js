@@ -81,7 +81,7 @@ const ReviewModal = ({ show, onHide, booking, onSuccess }) => {
 
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label>Xếp hạng <span className="text-danger">*</span></Form.Label>
+            <Form.Label>Đánh giá sao <span className="text-danger">*</span></Form.Label>
             <div className="rating-input">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button

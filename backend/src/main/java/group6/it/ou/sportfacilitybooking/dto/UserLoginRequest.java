@@ -1,19 +1,25 @@
-package group6.it.ou.sportfacilitybooking.request;
+package group6.it.ou.sportfacilitybooking.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 
 public class UserLoginRequest {
-    private String username;
+    @NotEmpty(message = "Email không được để trống")
+    @Email(message = "Email không hợp lệ")
+    private String email;
+
+    @NotEmpty(message = "Mật khẩu không được để trống")
     private String password;
 
     public UserLoginRequest() {}
 
-    public UserLoginRequest(String username, String password) {
-        this.username = username;
+    public UserLoginRequest(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
-    // Getters & Setters
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
