@@ -18,17 +18,11 @@ public interface CourtRepository extends JpaRepository<Court, Long> {
     @Query(nativeQuery = true, value = "SELECT f.owner_id FROM courts c INNER JOIN facilities f ON c.facility_id = f.id WHERE c.id = :courtId")
     Optional<Long> findOwnerIdByCourtId(@Param("courtId") Long courtId);
     
-    // Search courts with filters: address, sport type, price range
-    @Query("SELECT c FROM Court c " +
-           "JOIN c.facility f " +
-           "JOIN c.sportType st " +
-           "LEFT JOIN TimeSlot ts ON ts.court = c " +
-           "WHERE (f.address LIKE %:address% OR :address IS NULL OR :address = '') " +
-           "AND (:sportTypeId IS NULL OR st.id = :sportTypeId) " +
-           "AND c.isActive = true " +
-           "AND f.status = 'APPROVED'")
-    List<Court> searchCourts(
-        @Param("address") String address,
-        @Param("sportTypeId") Long sportTypeId
-    );
+    @Query("SELECT DISTINCT c FROM Court c " +
+           "JOIN FETCH c.facility f " +
+           "JOIN FETCH c.sportType st " +
+           "WHERE c.isActive = true " +
+           "AND f.status = 'APPROVED' " +
+           "AND (:sportTypeId IS NULL OR st.id = :sportTypeId)")
+    List<Court> searchActiveApprovedCourts(@Param("sportTypeId") Long sportTypeId);
 }
