@@ -28,19 +28,11 @@ const courtService = {
 
   // Tìm kiếm sân với bộ lọc (địa chỉ, loại thể thao)
   searchCourts: (address = '', sportTypeId = null) => {
-    const params = {};
-    const normalizedAddress = typeof address === 'string' ? address.trim() : '';
-
-    if (normalizedAddress) {
-      params.address = normalizedAddress;
-    }
-
-    if (sportTypeId !== null && sportTypeId !== undefined && sportTypeId !== '') {
-      params.sportTypeId = sportTypeId;
-    }
-
     return apiClient.get('/api/courts/search', {
-      params,
+      params: { 
+        address: address || null, 
+        sportTypeId: sportTypeId || null 
+      },
     });
   },
 };
