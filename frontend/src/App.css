@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
+
+:root {
+  --app-bg: #f8f9ff;
+  --app-surface: #ffffff;
+  --app-surface-soft: #eff4ff;
+  --app-text: #0b1c30;
+  --app-muted: #5b6472;
+  --app-primary: #0f52ba;
+  --app-primary-strong: #003c90;
+  --app-success: #00714d;
+  --app-border: #d3e4fe;
+  --app-shadow: 0 10px 32px rgba(15, 82, 186, 0.09);
+  --app-shadow-hover: 0 14px 34px rgba(15, 82, 186, 0.15);
+  --app-radius-sm: 8px;
+  --app-radius-md: 14px;
+  --app-radius-lg: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Lexend', sans-serif;
+  color: var(--app-text);
+  background: radial-gradient(circle at top, #f2f7ff 0%, var(--app-bg) 45%, #f6f8ff 100%);
+}
+
+a {
+  color: var(--app-primary-strong);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--app-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--app-text);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.card {
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-lg);
+  box-shadow: var(--app-shadow);
+}
+
+.card:hover {
+  box-shadow: var(--app-shadow-hover);
+}
+
+.btn {
+  border-radius: var(--app-radius-md);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 0.6rem 1rem;
+}
+
+.btn-primary {
+  background-color: var(--app-primary-strong);
+  border-color: var(--app-primary-strong);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+}
+
+.btn-success {
+  background-color: var(--app-success);
+  border-color: var(--app-success);
+}
+
+.btn-outline-secondary {
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+.btn-outline-secondary:hover {
+  background: var(--app-surface-soft);
+  color: var(--app-text);
+  border-color: #bfd4f6;
+}
+
+.booking-btn-disabled,
+.booking-btn-disabled:hover,
+.booking-btn-disabled:focus,
+.booking-btn-disabled:active {
+  background: #d6dbe1 !important;
+  border-color: #d6dbe1 !important;
+  color: #7b848e !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-sm);
+  min-height: 46px;
+  background: #f7faff;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: #fff;
+  border-color: var(--app-primary);
+  box-shadow: 0 0 0 0.2rem rgba(15, 82, 186, 0.15);
+}
+
+.alert {
+  border-radius: var(--app-radius-md);
+  border: 1px solid transparent;
+}
+
+.alert-danger {
+  border-color: #ffccc7;
+  background: #fff3f1;
+  color: #a12222;
+}
+
+.alert-info {
+  border-color: #cfe0ff;
+  background: #eef4ff;
+  color: #224f92;
+}
+
+.alert-success {
+  border-color: #bfe6d8;
+  background: #edf9f3;
+  color: #1d6b4e;
+}
+
+.badge {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.page-link {
+  border-radius: 999px;
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+}
+
+.page-item.active .page-link {
+  background: var(--app-primary-strong);
+  border-color: var(--app-primary-strong);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+.owner-dashboard-page .card,
+.admin-dashboard-page .card {
+  border-color: #d9e6ff;
+  border-radius: 14px;
+}
+
+.owner-dashboard-page .nav-tabs,
+.admin-dashboard-page .nav-tabs {
+  border-bottom-color: #d9e6ff;
+}
+
+.owner-dashboard-page .nav-tabs .nav-link,
+.admin-dashboard-page .nav-tabs .nav-link {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: #43516a;
+  border-radius: 0;
+}
+
+.owner-dashboard-page .nav-tabs .nav-link.active,
+.admin-dashboard-page .nav-tabs .nav-link.active {
+  color: #003c90;
+  border-bottom-color: #0f52ba;
+  background: transparent;
+  font-weight: 600;
+}
+
+.owner-dashboard-page table,
+.admin-dashboard-page table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.owner-dashboard-page thead th,
+.admin-dashboard-page thead th {
+  background: #eef4ff;
+  color: #203252;
+  border-bottom-width: 1px;
+}
+
+.owner-dashboard-page .table > :not(caption) > * > *,
+.admin-dashboard-page .table > :not(caption) > * > * {
+  border-bottom-color: #e7efff;
+}
+
+.owner-dashboard-page .badge,
+.admin-dashboard-page .badge {
+  font-size: 0.72rem;
+}
+
+.auth-page .card,
+.auth-form-card {
+  border-radius: 18px;
+}
