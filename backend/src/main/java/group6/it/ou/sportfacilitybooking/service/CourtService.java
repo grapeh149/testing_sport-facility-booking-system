@@ -13,8 +13,10 @@ import group6.it.ou.sportfacilitybooking.mapper.CourtMapper;
 import group6.it.ou.sportfacilitybooking.repository.CourtRepository;
 import group6.it.ou.sportfacilitybooking.repository.FacilityRepository;
 import group6.it.ou.sportfacilitybooking.repository.SportTypeRepository;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -121,8 +123,49 @@ public class CourtService {
 
     // Search courts with filters
     public List<CourtDTO> searchCourts(String address, Long sportTypeId) {
-        return courtRepository.searchCourts(address, sportTypeId).stream()
+        final String keyword = normalizeText(address);
+
+        return courtRepository.searchActiveApprovedCourts(sportTypeId).stream()
+            .filter(court -> keyword.isEmpty() || containsKeyword(court, keyword))
             .map(courtMapper::toDTO)
             .collect(Collectors.toList());
+    }
+
+    private boolean containsKeyword(Court court, String keyword) {
+        Facility facility = court.getFacility();
+        SportType sportType = court.getSportType();
+
+        String searchableText = String.join(" ",
+            normalizeText(court.getName()),
+            normalizeText(court.getDescription()),
+            normalizeText(court.getSurfaceType()),
+            normalizeText(facility != null ? facility.getName() : null),
+            normalizeText(facility != null ? facility.getAddress() : null),
+            normalizeText(facility != null ? facility.getDistrict() : null),
+            normalizeText(facility != null ? facility.getCity() : null),
+            normalizeText(sportType != null ? sportType.getName() : null)
+        );
+
+        return searchableText.contains(keyword);
+    }
+
+    private String normalizeText(String input) {
+        if (input == null) {
+            return "";
+        }
+
+        String trimmed = input.trim();
+        if (trimmed.isEmpty()) {
+            return "";
+        }
+
+        String noAccent = Normalizer.normalize(trimmed, Normalizer.Form.NFD)
+            .replaceAll("\\p{M}", "")
+            .replace('đ', 'd')
+            .replace('Đ', 'D');
+
+        return noAccent.toLowerCase(Locale.ROOT)
+            .replaceAll("\\s+", " ")
+            .trim();
     }
 }
