@@ -1,26 +1,30 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
+import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
 import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
-import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
-import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
-import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
-import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
 import group6.it.ou.sportfacilitybooking.service.BookingService;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -154,7 +158,7 @@ public class BookingController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/court/{id}")
     public ApiResponse<BookingDTO> getBookingById(@PathVariable Long id) {
         try {
             BookingDTO result = bookingService.getBookingById(id);

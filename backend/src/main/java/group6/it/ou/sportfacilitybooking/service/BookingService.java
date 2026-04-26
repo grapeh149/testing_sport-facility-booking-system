@@ -27,7 +27,9 @@ import group6.it.ou.sportfacilitybooking.repository.NotificationRepository;
 import group6.it.ou.sportfacilitybooking.repository.ReviewRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -189,6 +191,16 @@ public class BookingService {
             .orElseThrow(() -> new RuntimeException("Booking not found"));
         return bookingMapper.toDTO(booking);
     }
+
+    public List<BookingDTO> getCourtBookings(Long courtId) {
+        LocalDate today = LocalDate.now();
+
+        return bookingRepository.findByCourtIdOrderByBookingDateAscStartTimeAsc(courtId)
+            .stream()
+            .filter(booking -> !booking.getBookingDate().isBefore(today))
+            .map(bookingMapper::toDTO)
+            .collect(Collectors.toList());
+    }
     
     public Page<BookingDTO> getCustomerBookingHistory(Long customerId, Pageable pageable) {
         return bookingRepository.findByCustomerId(customerId, pageable)
@@ -229,6 +241,20 @@ public class BookingService {
             .stream()
             .map(bookingMapper::toDTO)
             .toList();
+    }
+    
+    @Transactional
+    public void autoConfirmPendingBookingsForNextDay() {
+        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+        List<Booking> bookingsToConfirm = bookingRepository.findByStatusAndCreatedAtBefore(BookingStatus.PENDING_CONFIRM, startOfToday);
+        for (Booking booking : bookingsToConfirm) {
+            booking.setStatus(BookingStatus.CONFIRMED);
+            booking.setUpdatedAt(LocalDateTime.now());
+            createNotification(booking.getCustomer(), NotificationType.BOOKING_CONFIRMED,
+                "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
+        }
+        bookingRepository.saveAll(bookingsToConfirm);
+        System.out.println("Auto-confirmed " + bookingsToConfirm.size() + " bookings.");
     }
     
     private String generateBookingCode() {
