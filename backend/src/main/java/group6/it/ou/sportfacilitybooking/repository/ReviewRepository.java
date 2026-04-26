@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 import group6.it.ou.sportfacilitybooking.entity.Review;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, Integer> {
-    List<Review> findByKhachHang_MaKH(Integer maKH);
-    List<Review> findBySanTheThao_MaSan(Integer maSan);
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+    List<Review> findByUser_Id(Long userId);
+    List<Review> findByFacility_Id(Long facilityId);
+    List<Review> findByBooking_Id(Long bookingId);
 }
