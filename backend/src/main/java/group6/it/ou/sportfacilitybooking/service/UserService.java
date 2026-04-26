@@ -1,7 +1,5 @@
 package group6.it.ou.sportfacilitybooking.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +13,7 @@ import group6.it.ou.sportfacilitybooking.entity.User;
 import group6.it.ou.sportfacilitybooking.entity.UserRole;
 import group6.it.ou.sportfacilitybooking.mapper.UserMapper;
 import group6.it.ou.sportfacilitybooking.repository.UserRepository;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional

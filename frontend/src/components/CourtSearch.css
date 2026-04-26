@@ -1,0 +1,43 @@
+.court-search-page .search-form-card {
+  border: 1px solid #d3e4fe;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.court-search-page .form-label {
+  color: #1d2c44;
+  margin-bottom: 0.45rem;
+  font-size: 0.93rem;
+}
+
+.court-search-page .hover-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.court-search-page .hover-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px rgba(15, 82, 186, 0.17) !important;
+}
+
+.court-search-page .card-footer {
+  border-top: 1px solid #e8efff;
+  padding-top: 0;
+}
+
+.court-search-page .btn-secondary {
+  background: #e8eefc;
+  border-color: #e8eefc;
+  color: #21406e;
+}
+
+.court-search-page .btn-secondary:hover {
+  background: #d9e5fb;
+  border-color: #d9e5fb;
+  color: #1f3b63;
+}
+
+@media (max-width: 768px) {
+  .court-search-page .search-form-card {
+    border-radius: 14px;
+  }
+}
