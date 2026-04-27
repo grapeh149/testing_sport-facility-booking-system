@@ -1,36 +1,31 @@
-package group6.it.ou.sportfacilitybooking.request;
+package group6.it.ou.sportfacilitybooking.dto;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public class ReviewCreateRequest {
+    @NotNull(message = "ID đặt sân không được để trống")
     private Long bookingId;
-    private Long facilityId;
-    private Long userId;
+
+    @NotNull(message = "Đánh giá không được để trống")
+    @Min(value = 1, message = "Đánh giá phải từ 1-5 sao")
+    @Max(value = 5, message = "Đánh giá phải từ 1-5 sao")
+    private Byte rating;
+
+    @NotEmpty(message = "Nhận xét không được để trống")
     private String comment;
-    private Integer rating;
 
     public ReviewCreateRequest() {}
-
-    public ReviewCreateRequest(Long bookingId, Long facilityId, Long userId, 
-                              String comment, Integer rating) {
-        this.bookingId = bookingId;
-        this.facilityId = facilityId;
-        this.userId = userId;
-        this.comment = comment;
-        this.rating = rating;
-    }
 
     // Getters & Setters
     public Long getBookingId() { return bookingId; }
     public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
 
-    public Long getFacilityId() { return facilityId; }
-    public void setFacilityId(Long facilityId) { this.facilityId = facilityId; }
-
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public Byte getRating() { return rating; }
+    public void setRating(Byte rating) { this.rating = rating; }
 
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
-
-    public Integer getRating() { return rating; }
-    public void setRating(Integer rating) { this.rating = rating; }
 }

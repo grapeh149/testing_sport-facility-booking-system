@@ -1,9 +1,8 @@
 package group6.it.ou.sportfacilitybooking.mapper;
 
 import org.springframework.stereotype.Component;
-
-import group6.it.ou.sportfacilitybooking.dto.PaymentDTO;
 import group6.it.ou.sportfacilitybooking.entity.Payment;
+import group6.it.ou.sportfacilitybooking.dto.PaymentDTO;
 
 @Component
 public class PaymentMapper {
