@@ -63,7 +63,7 @@ public class AuthService {
         
         // Generate JWT token
         String token = tokenProvider.generateToken(user.getId(), user.getEmail());
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFullName(), user.getRole().name());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFullName(), user.getRole().name(), user.getAvatarUrl());
     }
     
     public AuthResponse login(UserLoginRequest request) {
@@ -98,7 +98,7 @@ public class AuthService {
         
         // Generate JWT token
         String token = tokenProvider.generateToken(user.getId(), user.getEmail());
-        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFullName(), user.getRole().name());
+        return new AuthResponse(token, user.getId(), user.getEmail(), user.getFullName(), user.getRole().name(), user.getAvatarUrl());
     }
     
     public UserDTO changePassword(Long userId, String oldPassword, String newPassword) {

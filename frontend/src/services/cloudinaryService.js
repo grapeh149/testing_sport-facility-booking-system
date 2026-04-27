@@ -1,33 +1,16 @@
-import apiClient from './api';
+import api from './api';
 
-const cloudinaryService = {
-  // Upload ảnh lên Cloudinary thông qua backend
-  uploadImage: (file) => {
+export const cloudinaryService = {
+  uploadFacilityImage: async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    return apiClient.post('/api/upload/image', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },
 
-  // Upload nhiều ảnh
-  uploadImages: (files) => {
-    const formData = new FormData();
-    files.forEach((file, index) => {
-      formData.append(`files`, file);
-    });
-    return apiClient.post('/api/upload/images', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },
-
-  // Xóa ảnh từ Cloudinary thông qua backend
-  deleteImage: (imageUrl) => {
-    return apiClient.post('/api/upload/delete', { imageUrl });
+    try {
+      const response = await api.post('/api/upload', formData);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to upload facility image');
+    }
   },
 };
 
