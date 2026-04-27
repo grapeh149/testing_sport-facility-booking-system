@@ -1,0 +1,139 @@
+/* FullCalendar Custom Styling */
+.fc {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 0.95rem;
+}
+
+.fc .fc-button-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.fc .fc-button-primary.fc-button-active,
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.fc-theme-standard .fc-col-header-cell {
+  background-color: #f8f9fa;
+  padding: 12px 0;
+  font-weight: 600;
+}
+
+.fc-theme-standard .fc-daygrid-day,
+.fc-theme-standard .fc-timegrid-slot {
+  border-color: #dee2e6;
+}
+
+.fc-timegrid-slot {
+  height: 3.5rem;
+}
+
+.fc-daygrid-day:hover {
+  background-color: #f8f9fa;
+}
+
+.fc-event {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fc-event:hover {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.fc-event-title {
+  font-weight: 500;
+  padding: 4px 6px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.fc .fc-daygrid-day-number {
+  padding: 8px 4px;
+}
+
+.fc .fc-col-header-cell {
+  padding: 0.75rem 0 !important;
+  vertical-align: middle;
+}
+
+.fc-timegrid-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar */
+.fc-timegrid-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.fc-timegrid-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.fc-timegrid-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.fc-timegrid-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Event status colors */
+.fc-event.available {
+  background-color: #28a745 !important;
+  border-color: #1e7e34 !important;
+}
+
+.fc-event.pending {
+  background-color: #ffc107 !important;
+  border-color: #e0a800 !important;
+}
+
+.fc-event.booked {
+  background-color: #dc3545 !important;
+  border-color: #bb2d3b !important;
+}
+
+/* Now indicator */
+.fc-timegrid-now-indicator-line {
+  border-top: 2px solid #ff453a;
+}
+
+.fc-timegrid-now-indicator-container {
+  position: relative;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .fc {
+    font-size: 0.85rem;
+  }
+
+  .fc-timegrid-slot {
+    height: 2.5rem;
+  }
+
+  .fc .fc-button-group > .fc-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .fc-timegrid-container {
+    max-height: 400px;
+  }
+}
