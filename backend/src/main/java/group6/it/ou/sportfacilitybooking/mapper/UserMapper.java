@@ -1,45 +1,51 @@
 package group6.it.ou.sportfacilitybooking.mapper;
 
 import org.springframework.stereotype.Component;
-import group6.it.ou.sportfacilitybooking.dto.UserDTO;
 import group6.it.ou.sportfacilitybooking.entity.User;
-import group6.it.ou.sportfacilitybooking.entity.UserRole;
+import group6.it.ou.sportfacilitybooking.dto.UserDTO;
+import group6.it.ou.sportfacilitybooking.dto.UserRegistrationRequest;
 
 @Component
 public class UserMapper {
-    // Entity → DTO
-    public UserDTO toDTO(User entity) {
+
+    public UserDTO toDTO(User user) {
+        if (user == null) return null;
+        
         UserDTO dto = new UserDTO();
-        dto.setId(entity.getId());
-        dto.setFullName(entity.getFullName());
-        dto.setUsername(entity.getUsername());
-        dto.setEmail(entity.getEmail());
-        dto.setPhone(entity.getPhone());
-        if (entity.getRole() != null) {
-            dto.setRole(entity.getRole().name());
-        }
-        dto.setIsActive(entity.getIsActive());
-        dto.setAvatarUrl(entity.getAvatarUrl());
-        dto.setCreatedAt(entity.getCreatedAt());
-        dto.setUpdatedAt(entity.getUpdatedAt());
+        dto.setId(user.getId());
+        dto.setFullName(user.getFullName());
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setPhone(user.getPhone());
+        dto.setRole(user.getRole().toString());
+        dto.setIsActive(user.getIsActive());
+        dto.setAvatarUrl(user.getAvatarUrl());
+        dto.setCreatedAt(user.getCreatedAt());
+        dto.setStatus(user.getIsActive() ? "ACTIVE" : "BLOCKED");
         return dto;
     }
 
-    // DTO → Entity
     public User toEntity(UserDTO dto) {
-        User entity = new User();
-        entity.setId(dto.getId());
-        entity.setFullName(dto.getFullName());
-        entity.setUsername(dto.getUsername());
-        entity.setEmail(dto.getEmail());
-        entity.setPhone(dto.getPhone());
-        if (dto.getRole() != null) {
-            entity.setRole(UserRole.valueOf(dto.getRole()));
-        }
-        entity.setIsActive(dto.getIsActive());
-        entity.setAvatarUrl(dto.getAvatarUrl());
-        entity.setCreatedAt(dto.getCreatedAt());
-        entity.setUpdatedAt(dto.getUpdatedAt());
-        return entity;
+        if (dto == null) return null;
+        
+        User user = new User();
+        user.setId(dto.getId());
+        user.setFullName(dto.getFullName());
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setIsActive(dto.getIsActive());
+        user.setAvatarUrl(dto.getAvatarUrl());
+        return user;
+    }
+
+    public User toEntity(UserRegistrationRequest request) {
+        if (request == null) return null;
+        
+        User user = new User();
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        return user;
     }
 }

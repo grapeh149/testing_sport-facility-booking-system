@@ -243,6 +243,7 @@ public class BookingService {
             .toList();
     }
 
+    
     @Transactional
     public void autoConfirmPendingBookingsForNextDay() {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
@@ -258,6 +259,7 @@ public class BookingService {
     }
 
 
+    
     private String generateBookingCode() {
         return "SB-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
     }
