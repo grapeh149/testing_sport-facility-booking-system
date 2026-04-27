@@ -4,56 +4,39 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reviews")
+@Table(name = "Review")
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
-
-    @ManyToOne
-    @JoinColumn(name = "facility_id")
-    private Facility facility;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    private Integer maReview;
     private String comment;
+    private LocalDateTime reviewDate;
     private Integer rating;
-    private LocalDateTime createdAt;
 
-    // Constructor
-    public Review() {}
+    @ManyToOne
+    @JoinColumn(name = "maKH")
+    private KhachHang khachHang;
 
-    public Review(Long id, String comment, Integer rating) {
-        this.id = id;
-        this.comment = comment;
-        this.rating = rating;
-    }
+    @ManyToOne
+    @JoinColumn(name = "maSan")
+    private SanTheThao sanTheThao;
 
-    // Getters & Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Booking getBooking() { return booking; }
-    public void setBooking(Booking booking) { this.booking = booking; }
-
-    public Facility getFacility() { return facility; }
-    public void setFacility(Facility facility) { this.facility = facility; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public Integer getMaReview() { return maReview; }
+    public void setMaReview(Integer maReview) { this.maReview = maReview; }
 
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
 
+    public LocalDateTime getReviewDate() { return reviewDate; }
+    public void setReviewDate(LocalDateTime reviewDate) { this.reviewDate = reviewDate; }
+
     public Integer getRating() { return rating; }
     public void setRating(Integer rating) { this.rating = rating; }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public KhachHang getKhachHang() { return khachHang; }
+    public void setKhachHang(KhachHang khachHang) { this.khachHang = khachHang; }
+
+    public SanTheThao getSanTheThao() { return sanTheThao; }
+    public void setSanTheThao(SanTheThao sanTheThao) { this.sanTheThao = sanTheThao; }
 }

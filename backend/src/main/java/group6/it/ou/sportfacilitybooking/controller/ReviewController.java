@@ -7,8 +7,9 @@ import group6.it.ou.sportfacilitybooking.dto.ReviewDTO;
 import group6.it.ou.sportfacilitybooking.service.ReviewService;
 
 @RestController
-@RequestMapping("/api/reviews")
+@RequestMapping("/api/review")
 public class ReviewController {
+
     @Autowired
     private ReviewService service;
 
@@ -18,23 +19,18 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}")
-    public ReviewDTO getById(@PathVariable Long id) {
+    public ReviewDTO getById(@PathVariable Integer id) {
         return service.getById(id);
     }
 
-    @GetMapping("/facility/{facilityId}")
-    public List<ReviewDTO> getByFacility(@PathVariable Long facilityId) {
-        return service.getByFacility(facilityId);
+    @GetMapping("/san/{maSan}")
+    public List<ReviewDTO> getBySan(@PathVariable Integer maSan) {
+        return service.getBySan(maSan);
     }
 
-    @GetMapping("/user/{userId}")
-    public List<ReviewDTO> getByUser(@PathVariable Long userId) {
-        return service.getByUser(userId);
-    }
-
-    @GetMapping("/booking/{bookingId}")
-    public List<ReviewDTO> getByBooking(@PathVariable Long bookingId) {
-        return service.getByBooking(bookingId);
+    @GetMapping("/khach-hang/{maKH}")
+    public List<ReviewDTO> getByKhachHang(@PathVariable Integer maKH) {
+        return service.getByKhachHang(maKH);
     }
 
     @PostMapping
@@ -43,12 +39,12 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    public ReviewDTO update(@PathVariable Long id, @RequestBody ReviewDTO dto) {
+    public ReviewDTO update(@PathVariable Integer id, @RequestBody ReviewDTO dto) {
         return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Integer id) {
         service.delete(id);
     }
 }

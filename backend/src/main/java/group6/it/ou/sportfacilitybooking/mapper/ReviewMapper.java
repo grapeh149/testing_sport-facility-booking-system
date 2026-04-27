@@ -6,27 +6,26 @@ import group6.it.ou.sportfacilitybooking.entity.Review;
 
 @Component
 public class ReviewMapper {
+
     public ReviewDTO toDTO(Review entity) {
         ReviewDTO dto = new ReviewDTO();
-        dto.setId(entity.getId());
+        dto.setMaReview(entity.getMaReview());
         dto.setComment(entity.getComment());
+        dto.setReviewDate(entity.getReviewDate());
         dto.setRating(entity.getRating());
-        dto.setCreatedAt(entity.getCreatedAt());
-        if (entity.getBooking() != null)
-            dto.setBookingId(entity.getBooking().getId());
-        if (entity.getFacility() != null)
-            dto.setFacilityId(entity.getFacility().getId());
-        if (entity.getUser() != null)
-            dto.setUserId(entity.getUser().getId());
+        if (entity.getKhachHang() != null)
+            dto.setMaKH(entity.getKhachHang().getMaKH());
+        if (entity.getSanTheThao() != null)
+            dto.setMaSan(entity.getSanTheThao().getMaSan());
         return dto;
     }
 
     public Review toEntity(ReviewDTO dto) {
         Review entity = new Review();
-        entity.setId(dto.getId());
+        entity.setMaReview(dto.getMaReview());
         entity.setComment(dto.getComment());
+        entity.setReviewDate(dto.getReviewDate());
         entity.setRating(dto.getRating());
-        entity.setCreatedAt(dto.getCreatedAt());
         return entity;
     }
 }
