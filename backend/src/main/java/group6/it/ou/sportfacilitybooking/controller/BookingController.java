@@ -168,6 +168,17 @@ public class BookingController {
         }
     }
 
+    @GetMapping("/court/{courtId}")
+    public ApiResponse<java.util.List<BookingDTO>> getCourtBookings(@PathVariable Long courtId) {
+        try {
+            java.util.List<BookingDTO> result = bookingService.getCourtBookings(courtId);
+            return new ApiResponse<>(true, result, "Lấy lịch đặt sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
+    }
+
+
     @PostMapping("/{id}/confirm")
     public ApiResponse<BookingDTO> confirmBooking(@PathVariable Long id, @RequestParam Long ownerId) {
         try {

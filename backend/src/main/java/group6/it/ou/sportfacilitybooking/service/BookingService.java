@@ -192,14 +192,14 @@ public class BookingService {
         return bookingMapper.toDTO(booking);
     }
 
+
     public List<BookingDTO> getCourtBookings(Long courtId) {
         LocalDate today = LocalDate.now();
-
         return bookingRepository.findByCourtIdOrderByBookingDateAscStartTimeAsc(courtId)
-            .stream()
-            .filter(booking -> !booking.getBookingDate().isBefore(today))
-            .map(bookingMapper::toDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .filter(booking -> !booking.getBookingDate().isBefore(today))
+                .map(bookingMapper::toDTO)
+                .collect(Collectors.toList());
     }
     
     public Page<BookingDTO> getCustomerBookingHistory(Long customerId, Pageable pageable) {
@@ -242,6 +242,7 @@ public class BookingService {
             .map(bookingMapper::toDTO)
             .toList();
     }
+
     
     @Transactional
     public void autoConfirmPendingBookingsForNextDay() {
@@ -251,11 +252,13 @@ public class BookingService {
             booking.setStatus(BookingStatus.CONFIRMED);
             booking.setUpdatedAt(LocalDateTime.now());
             createNotification(booking.getCustomer(), NotificationType.BOOKING_CONFIRMED,
-                "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
+                    "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
         }
         bookingRepository.saveAll(bookingsToConfirm);
         System.out.println("Auto-confirmed " + bookingsToConfirm.size() + " bookings.");
     }
+
+
     
     private String generateBookingCode() {
         return "SB-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
