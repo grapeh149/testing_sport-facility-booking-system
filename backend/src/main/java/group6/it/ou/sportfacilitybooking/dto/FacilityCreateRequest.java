@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+
 
 public class FacilityCreateRequest {
     @NotEmpty(message = "Tên sân không được để trống")
