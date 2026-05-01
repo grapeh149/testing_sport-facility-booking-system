@@ -200,7 +200,7 @@ public class BookingService {
                 .filter(booking -> !booking.getBookingDate().isBefore(today))
                 .map(bookingMapper::toDTO)
                 .collect(Collectors.toList());
-
+    }
     
     public Page<BookingDTO> getCustomerBookingHistory(Long customerId, Pageable pageable) {
         return bookingRepository.findByCustomerId(customerId, pageable)
