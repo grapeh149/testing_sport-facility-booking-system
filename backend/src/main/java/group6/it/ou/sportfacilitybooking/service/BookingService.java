@@ -192,10 +192,6 @@ public class BookingService {
         return bookingMapper.toDTO(booking);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 8ccbee04b41c5621b754006b4652b96b9309ae7c
 
     public List<BookingDTO> getCourtBookings(Long courtId) {
         LocalDate today = LocalDate.now();
@@ -204,20 +200,7 @@ public class BookingService {
                 .filter(booking -> !booking.getBookingDate().isBefore(today))
                 .map(bookingMapper::toDTO)
                 .collect(Collectors.toList());
-<<<<<<< HEAD
-=======
-    public List<BookingDTO> getCourtBookings(Long courtId) {
-        LocalDate today = LocalDate.now();
 
-        return bookingRepository.findByCourtIdOrderByBookingDateAscStartTimeAsc(courtId)
-            .stream()
-            .filter(booking -> !booking.getBookingDate().isBefore(today))
-            .map(bookingMapper::toDTO)
-            .collect(Collectors.toList());
->>>>>>> 52e820fe573af63ab188977f7d49c42fcabaf188
-=======
->>>>>>> 8ccbee04b41c5621b754006b4652b96b9309ae7c
-    }
     
     public Page<BookingDTO> getCustomerBookingHistory(Long customerId, Pageable pageable) {
         return bookingRepository.findByCustomerId(customerId, pageable)
@@ -259,16 +242,7 @@ public class BookingService {
             .map(bookingMapper::toDTO)
             .toList();
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 52e820fe573af63ab188977f7d49c42fcabaf188
-=======
-
-    
->>>>>>> 8ccbee04b41c5621b754006b4652b96b9309ae7c
     @Transactional
     public void autoConfirmPendingBookingsForNextDay() {
         LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
@@ -277,31 +251,15 @@ public class BookingService {
             booking.setStatus(BookingStatus.CONFIRMED);
             booking.setUpdatedAt(LocalDateTime.now());
             createNotification(booking.getCustomer(), NotificationType.BOOKING_CONFIRMED,
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                     "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
-=======
-                "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
->>>>>>> 52e820fe573af63ab188977f7d49c42fcabaf188
-=======
-                    "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
->>>>>>> 8ccbee04b41c5621b754006b4652b96b9309ae7c
+
         }
         bookingRepository.saveAll(bookingsToConfirm);
         System.out.println("Auto-confirmed " + bookingsToConfirm.size() + " bookings.");
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 
-=======
-    
->>>>>>> 52e820fe573af63ab188977f7d49c42fcabaf188
-=======
-
-
-    
->>>>>>> 8ccbee04b41c5621b754006b4652b96b9309ae7c
     private String generateBookingCode() {
         return "SB-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
     }
