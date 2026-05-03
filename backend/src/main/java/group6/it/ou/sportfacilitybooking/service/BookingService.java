@@ -253,9 +253,9 @@ public class BookingService {
             booking.setStatus(BookingStatus.CONFIRMED);
             booking.setUpdatedAt(LocalDateTime.now());
             createNotification(booking.getCustomer(), NotificationType.BOOKING_CONFIRMED,
-                    "Đơn đặt sân tự động xác nhận",
-                    "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(),
-                    "BOOKING");
+
+                    "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
+
         }
         bookingRepository.saveAll(bookingsToConfirm);
         System.out.println("Auto-confirmed " + bookingsToConfirm.size() + " bookings.");
