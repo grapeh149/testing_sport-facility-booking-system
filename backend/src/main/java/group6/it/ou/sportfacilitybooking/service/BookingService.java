@@ -228,37 +228,37 @@ public class BookingService {
                 return dto;
             });
     }
-    
-    // Get bookings by owner and status
-    public Page<BookingDTO> getOwnerBookingsByStatus(Long ownerId, BookingStatus status, Pageable pageable) {
-        return bookingRepository.findByOwner_IdAndStatus(ownerId, status, pageable)
-            .map(bookingMapper::toDTO);
-    }
-    
-    // Get all pending approvals (quick count)
-    public java.util.List<BookingDTO> getOwnerPendingApprovalsQuick(Long ownerId) {
-        return bookingRepository.findPendingApprovalsForOwner(ownerId)
-            .stream()
-            .map(bookingMapper::toDTO)
-            .toList();
-    }
 
-    @Transactional
-    public void autoConfirmPendingBookingsForNextDay() {
-        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
-        List<Booking> bookingsToConfirm = bookingRepository.findByStatusAndCreatedAtBefore(BookingStatus.PENDING_CONFIRM, startOfToday);
-        for (Booking booking : bookingsToConfirm) {
-            booking.setStatus(BookingStatus.CONFIRMED);
-            booking.setUpdatedAt(LocalDateTime.now());
-            createNotification(booking.getCustomer(), NotificationType.BOOKING_CONFIRMED,
-
-                    "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
-
-        }
-        bookingRepository.saveAll(bookingsToConfirm);
-        System.out.println("Auto-confirmed " + bookingsToConfirm.size() + " bookings.");
-    }
-
+    // 3 hàm này non-use
+//    // Get bookings by owner and status
+//    public Page<BookingDTO> getOwnerBookingsByStatus(Long ownerId, BookingStatus status, Pageable pageable) {
+//        return bookingRepository.findByOwner_IdAndStatus(ownerId, status, pageable)
+//            .map(bookingMapper::toDTO);
+//    }
+//
+//    // Get all pending approvals (quick count)
+//    public java.util.List<BookingDTO> getOwnerPendingApprovalsQuick(Long ownerId) {
+//        return bookingRepository.findPendingApprovalsForOwner(ownerId)
+//            .stream()
+//            .map(bookingMapper::toDTO)
+//            .toList();
+//    }
+//
+//    @Transactional
+//    public void autoConfirmPendingBookingsForNextDay() {
+//        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
+//        List<Booking> bookingsToConfirm = bookingRepository.findByStatusAndCreatedAtBefore(BookingStatus.PENDING_CONFIRM, startOfToday);
+//        for (Booking booking : bookingsToConfirm) {
+//            booking.setStatus(BookingStatus.CONFIRMED);
+//            booking.setUpdatedAt(LocalDateTime.now());
+//            createNotification(booking.getCustomer(), NotificationType.BOOKING_CONFIRMED,
+//
+//                    "Đơn đặt sân tự động xác nhận", "Đơn " + booking.getBookingCode() + " đã được hệ thống tự động xác nhận", booking.getId(), "BOOKING");
+//
+//        }
+//        bookingRepository.saveAll(bookingsToConfirm);
+//        System.out.println("Auto-confirmed " + bookingsToConfirm.size() + " bookings.");
+//    }
 
     private String generateBookingCode() {
         return "SB-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 5).toUpperCase();
