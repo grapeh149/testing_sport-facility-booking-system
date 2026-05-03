@@ -43,7 +43,16 @@ class CheckInControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(checkInController).setValidator(new org.springframework.validation.Validator() { public boolean supports(Class<?> c) { return true; } public void validate(Object o, org.springframework.validation.Errors e) {} }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(checkInController)
+                .setValidator(new org.springframework.validation.Validator() {
+                    public boolean supports(Class<?> c) {
+                        return true;
+                    }
+
+                    public void validate(Object o, org.springframework.validation.Errors e) {
+                    }
+                }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver())
+                .build();
         checkInDTO = new CheckInDTO();
         checkInDTO.setId(1L);
         checkInDTO.setBookingId(1L);
@@ -73,7 +82,8 @@ class CheckInControllerTest {
         CheckInRequest request = new CheckInRequest();
         request.setNote("Checked in");
 
-        when(checkInService.checkIn(eq(1L), eq(2L), any(CheckInRequest.class))).thenThrow(new RuntimeException("Error"));
+        when(checkInService.checkIn(eq(1L), eq(2L), any(CheckInRequest.class)))
+                .thenThrow(new RuntimeException("Error"));
 
         mockMvc.perform(post("/api/checkins")
                 .param("bookingId", "1")

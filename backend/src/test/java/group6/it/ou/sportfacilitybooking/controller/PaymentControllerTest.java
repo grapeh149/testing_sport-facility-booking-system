@@ -45,7 +45,16 @@ class PaymentControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(paymentController).setValidator(new org.springframework.validation.Validator() { public boolean supports(Class<?> c) { return true; } public void validate(Object o, org.springframework.validation.Errors e) {} }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(paymentController)
+                .setValidator(new org.springframework.validation.Validator() {
+                    public boolean supports(Class<?> c) {
+                        return true;
+                    }
+
+                    public void validate(Object o, org.springframework.validation.Errors e) {
+                    }
+                }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver())
+                .build();
         paymentDTO = new PaymentDTO();
         paymentDTO.setId(1L);
     }
@@ -53,7 +62,8 @@ class PaymentControllerTest {
     @Test
     @DisplayName("Should create VNPay payment url")
     void testCreateVNPayPaymentUrl() throws Exception {
-        when(paymentService.createVNPayPaymentUrl(eq(1L), anyString(), anyString(), any(), any())).thenReturn("http://vnpay.url");
+        when(paymentService.createVNPayPaymentUrl(eq(1L), anyString(), anyString(), any(), any()))
+                .thenReturn("http://vnpay.url");
 
         mockMvc.perform(post("/api/payments/1/vnpay")
                 .param("returnUrl", "http://return.url"))
@@ -64,7 +74,8 @@ class PaymentControllerTest {
     @Test
     @DisplayName("Should handle exception when create VNPay payment url")
     void testCreateVNPayPaymentUrl_Exception() throws Exception {
-        when(paymentService.createVNPayPaymentUrl(eq(1L), anyString(), anyString(), any(), any())).thenThrow(new RuntimeException("Error"));
+        when(paymentService.createVNPayPaymentUrl(eq(1L), anyString(), anyString(), any(), any()))
+                .thenThrow(new RuntimeException("Error"));
 
         mockMvc.perform(post("/api/payments/1/vnpay")
                 .param("returnUrl", "http://return.url"))

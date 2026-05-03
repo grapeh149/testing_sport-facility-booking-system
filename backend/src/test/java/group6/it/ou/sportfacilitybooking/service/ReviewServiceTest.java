@@ -1,4 +1,4 @@
-package group6.it.ou.sportfacilitybooking;
+package group6.it.ou.sportfacilitybooking.service;
 
 import group6.it.ou.sportfacilitybooking.dto.ReviewCreateRequest;
 import group6.it.ou.sportfacilitybooking.dto.ReviewDTO;
@@ -19,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 
 import java.util.List;
 import java.util.Optional;
