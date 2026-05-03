@@ -14,9 +14,6 @@ import jakarta.validation.Valid;
 import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
 import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
 import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
-import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
-import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
-import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;
 import group6.it.ou.sportfacilitybooking.service.BookingService;
 
 import java.util.LinkedHashMap;
@@ -26,12 +23,12 @@ import java.util.Map;
 @RequestMapping("/api/bookings")
 @CrossOrigin(origins = "*")
 public class BookingController {
-
+    
     private static final Logger logger = LoggerFactory.getLogger(BookingController.class);
-
+    
     @Autowired
     private BookingService bookingService;
-
+    
     // Helper method to extract userId from request attributes (set by JwtAuthenticationFilter)
     private Long extractUserIdFromRequest(HttpServletRequest request) {
         Object userIdAttr = request.getAttribute("userId");
@@ -40,16 +37,16 @@ public class BookingController {
         }
         return null;
     }
-
+    
     @GetMapping
     public ApiResponse<String> getAllBookings() {
         logger.info("[API] GET /api/bookings - Getting all bookings");
-        return new ApiResponse<>(true, "Use /api/bookings/my-bookings to get your bookings",
-                "Available endpoints: /my-bookings, /{id}");
+        return new ApiResponse<>(true, "Use /api/bookings/my-bookings to get your bookings", 
+            "Available endpoints: /my-bookings, /{id}");
     }
-
+    
     @PostMapping
-    public ApiResponse<BookingDTO> createBooking(@Valid @RequestBody BookingCreateRequest request,
+    public ApiResponse<BookingDTO> createBooking(@Valid @RequestBody BookingCreateRequest request, 
                                                  HttpServletRequest httpRequest) {
         try {
             Long customerId = extractUserIdFromRequest(httpRequest);
@@ -62,7 +59,7 @@ public class BookingController {
             return new ApiResponse<>(false, null, "Đặt sân thất bại: " + e.getMessage());
         }
     }
-
+    
     @GetMapping("/code/{bookingCode}")
     public ApiResponse<BookingDTO> getBookingDetails(@PathVariable String bookingCode) {
         try {
@@ -72,7 +69,7 @@ public class BookingController {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-
+    
     @GetMapping("/my-bookings")
     public ApiResponse<Map<String, Object>> getMyBookings(
             @RequestParam(defaultValue = "0") int page,
@@ -81,10 +78,10 @@ public class BookingController {
         try {
             Long customerId = extractUserIdFromRequest(request);
             logger.info("[API] GET /api/bookings/my-bookings - Customer ID: {}, Page: {}, Size: {}", customerId, page, size);
-
+            
             Pageable pageable = PageRequest.of(page, size);
             Page<BookingDTO> result = bookingService.getCustomerBookingHistory(customerId, pageable);
-
+            
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("content", result.getContent());
             responseData.put("currentPage", result.getNumber());
@@ -92,14 +89,14 @@ public class BookingController {
             responseData.put("totalElements", result.getTotalElements());
             responseData.put("hasNextPage", result.hasNext());
             responseData.put("hasPreviousPage", result.hasPrevious());
-
+            
             return new ApiResponse<>(true, responseData, "Lấy lịch sử đặt sân thành công");
         } catch (Exception e) {
             logger.error("[API] Failed to get bookings: {}", e.getMessage());
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-
+    
     @GetMapping("/owner/pending-bookings")
     public ApiResponse<Map<String, Object>> getOwnerPendingBookings(
             @RequestParam(defaultValue = "0") int page,
@@ -108,10 +105,10 @@ public class BookingController {
         try {
             Long ownerId = extractUserIdFromRequest(request);
             logger.info("[API] GET /api/bookings/owner/pending-bookings - Owner ID: {}, Page: {}, Size: {}", ownerId, page, size);
-
+            
             Pageable pageable = PageRequest.of(page, size);
             Page<BookingDTO> result = bookingService.getOwnerPendingBookings(ownerId, pageable);
-
+            
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("content", result.getContent());
             responseData.put("currentPage", result.getNumber());
@@ -119,7 +116,7 @@ public class BookingController {
             responseData.put("totalElements", result.getTotalElements());
             responseData.put("hasNextPage", result.hasNext());
             responseData.put("hasPreviousPage", result.hasPrevious());
-
+            
             return new ApiResponse<>(true, responseData, "Lấy danh sách đơn cần duyệt thành công");
         } catch (Exception e) {
             logger.error("[API] Failed to get pending bookings: {}", e.getMessage());
@@ -135,10 +132,10 @@ public class BookingController {
         try {
             Long ownerId = extractUserIdFromRequest(request);
             logger.info("[API] GET /api/bookings/owner/all-bookings - Owner ID: {}, Page: {}, Size: {}", ownerId, page, size);
-
+            
             Pageable pageable = PageRequest.of(page, size);
             Page<BookingDTO> result = bookingService.getOwnerAllBookings(ownerId, pageable);
-
+            
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("content", result.getContent());
             responseData.put("currentPage", result.getNumber());
@@ -146,14 +143,14 @@ public class BookingController {
             responseData.put("totalElements", result.getTotalElements());
             responseData.put("hasNextPage", result.hasNext());
             responseData.put("hasPreviousPage", result.hasPrevious());
-
+            
             return new ApiResponse<>(true, responseData, "Lấy danh sách tất cả đơn đặt thành công");
         } catch (Exception e) {
             logger.error("[API] Failed to get all owner bookings: {}", e.getMessage());
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-
+    
     @GetMapping("/{id}")
     public ApiResponse<BookingDTO> getBookingById(@PathVariable Long id) {
         try {
@@ -164,6 +161,16 @@ public class BookingController {
         }
     }
 
+    @GetMapping("/court/{courtId}")
+    public ApiResponse<java.util.List<BookingDTO>> getCourtBookings(@PathVariable Long courtId) {
+        try {
+            java.util.List<BookingDTO> result = bookingService.getCourtBookings(courtId);
+            return new ApiResponse<>(true, result, "Lấy lịch đặt sân thành công");
+        } catch (Exception e) {
+            return new ApiResponse<>(false, null, e.getMessage());
+        }
+    }
+    
     @PostMapping("/{id}/confirm")
     public ApiResponse<BookingDTO> confirmBooking(@PathVariable Long id, @RequestParam Long ownerId) {
         try {
@@ -173,7 +180,7 @@ public class BookingController {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-
+    
     @PostMapping("/{id}/cancel")
     public ApiResponse<BookingDTO> cancelBookingPost(@PathVariable Long id, @RequestParam(required = false) String reason) {
         try {
@@ -183,7 +190,7 @@ public class BookingController {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-
+    
     @DeleteMapping("/{id}")
     public ApiResponse<BookingDTO> cancelBooking(@PathVariable Long id) {
         try {

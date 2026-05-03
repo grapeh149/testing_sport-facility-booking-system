@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Modal, Button, Card, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import bookingService from '../services/bookingService';
 import paymentService from '../services/paymentService';
 
 const TimeSlotBooking = ({ show, onHide, court, timeslot, bookingDate }) => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,7 +33,40 @@ const TimeSlotBooking = ({ show, onHide, court, timeslot, bookingDate }) => {
   const depositAmount = Math.round(totalPrice * depositRate / 100);
   const remainingAmount = totalPrice - depositAmount;
 
+  const isPastBookingTime = () => {
+    if (!bookingDate || !timeslot?.startTime) {
+      return true;
+    }
+
+    const [startHour, startMin, startSec] = timeslot.startTime.split(':').map(Number);
+    const bookingStart = new Date(bookingDate);
+    bookingStart.setHours(startHour, startMin, startSec || 0, 0);
+
+    return new Date() >= bookingStart;
+  };
+
+  const requireAuthForBooking = () => {
+    if (isAuthenticated) {
+      return true;
+    }
+
+    setError('Vui lòng đăng nhập để đặt sân hoặc thêm vào sân của tôi.');
+    setTimeout(() => {
+      navigate('/login');
+    }, 600);
+    return false;
+  };
+
   const handleDeferPayment = async () => {
+    if (!requireAuthForBooking()) {
+      return;
+    }
+
+    if (isPastBookingTime()) {
+      setError('Đặt sân vào khung giờ quá khứ không thành công. Vui lòng chọn khung giờ khác.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
@@ -62,6 +97,15 @@ const TimeSlotBooking = ({ show, onHide, court, timeslot, bookingDate }) => {
   };
 
   const handlePaymentMOMO = async () => {
+    if (!requireAuthForBooking()) {
+      return;
+    }
+
+    if (isPastBookingTime()) {
+      setError('Đặt sân vào khung giờ quá khứ không thành công. Vui lòng chọn khung giờ khác.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
@@ -214,7 +258,7 @@ const TimeSlotBooking = ({ show, onHide, court, timeslot, bookingDate }) => {
               Đang xử lý...
             </>
           ) : (
-            '➕ Thêm vào sân của tôi'
+            'Thêm vào sân của tôi'
           )}
         </Button>
         <Button
@@ -228,7 +272,7 @@ const TimeSlotBooking = ({ show, onHide, court, timeslot, bookingDate }) => {
               Đang xử lý...
             </>
           ) : (
-            '💳 Thanh toán VNPay'
+            'Thanh toán VNPay'
           )}
         </Button>
       </Modal.Footer>

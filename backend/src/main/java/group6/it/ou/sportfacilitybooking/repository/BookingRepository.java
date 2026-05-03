@@ -37,6 +37,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.ownerId = :ownerId ORDER BY b.createdAt DESC")
     Page<Booking> findByOwnerId(@Param("ownerId") Long ownerId, Pageable pageable);
 
+    // Get all bookings for a specific court ordered by date and time
+    @Query("SELECT b FROM Booking b WHERE b.court.id = :courtId ORDER BY b.bookingDate ASC, b.startTime ASC")
+    List<Booking> findByCourtIdOrderByBookingDateAscStartTimeAsc(@Param("courtId") Long courtId);
+
     // Get booking for owner with any status
     @Query("SELECT b FROM Booking b WHERE b.ownerId = :ownerId AND b.bookingCode = :bookingCode")
     Optional<Booking> findByOwnerIdAndBookingCode(@Param("ownerId") Long ownerId, @Param("bookingCode") String bookingCode);
@@ -48,4 +52,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     // Find booking with eager load of timeSlot - use for payment validation
     @Query("SELECT DISTINCT b FROM Booking b LEFT JOIN FETCH b.timeSlot WHERE b.id = :bookingId")
     Optional<Booking> findByIdWithTimeSlot(@Param("bookingId") Long bookingId);
+
+    // Find bookings for auto-confirm
+    List<Booking> findByStatusAndCreatedAtBefore(BookingStatus status, java.time.LocalDateTime createdAt);
 }

@@ -82,4 +82,4 @@ jest.setTimeout(10000);
 global.URL.createObjectURL = jest.fn(() => 'blob:mock-url');
 global.URL.revokeObjectURL = jest.fn();
 
-console.log('✅ Jest setup completed');
+console.log('Jest setup completed');

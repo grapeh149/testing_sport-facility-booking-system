@@ -64,6 +64,13 @@ public class SecurityConfig {
                 
                 // Court endpoints - public read
                 .requestMatchers(HttpMethod.GET, "/api/courts/**").permitAll()
+
+                // Booking schedule endpoint - public read for court detail calendar
+                .requestMatchers(HttpMethod.GET, "/api/bookings/court/**").permitAll()
+
+                // Sport type endpoints - public read for search filter
+                .requestMatchers(HttpMethod.GET, "/api/sport-types/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/sport-types").permitAll()
                 
                 // TimeSlot endpoints - public read
                 .requestMatchers(HttpMethod.GET, "/api/timeslots/**").permitAll()
