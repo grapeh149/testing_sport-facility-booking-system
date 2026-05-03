@@ -1,4 +1,4 @@
-package group6.it.ou.sportfacilitybooking;
+package group6.it.ou.sportfacilitybooking.service;
 
 import group6.it.ou.sportfacilitybooking.dto.PaymentDTO;
 import group6.it.ou.sportfacilitybooking.dto.PaymentIpnRequest;
@@ -34,10 +34,14 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
 
-    @Mock private PaymentRepository paymentRepository;
-    @Mock private BookingRepository bookingRepository;
-    @Mock private PaymentMapper paymentMapper;
-    @Mock private NotificationRepository notificationRepository;
+    @Mock
+    private PaymentRepository paymentRepository;
+    @Mock
+    private BookingRepository bookingRepository;
+    @Mock
+    private PaymentMapper paymentMapper;
+    @Mock
+    private NotificationRepository notificationRepository;
 
     @InjectMocks
     private PaymentService paymentService;
@@ -92,8 +96,7 @@ class PaymentServiceTest {
                 Arguments.of(null, "127.0.0.1"),
                 Arguments.of(" ", "127.0.0.1"),
                 Arguments.of("0:0:0:0:0:0:0:1", "127.0.0.1"),
-                Arguments.of("192.168.1.100", "192.168.1.100")
-        );
+                Arguments.of("192.168.1.100", "192.168.1.100"));
     }
 
     @Test
@@ -244,7 +247,7 @@ class PaymentServiceTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(strings = {"", "00"})
+    @ValueSource(strings = { "", "00" })
     void processVNPayCallback_successResponse_updatePaymentSuccess(String transactionStatus) {
         // ARRANGE
         Map<String, String> params = signedParams("TXN1", "00", transactionStatus);
@@ -313,7 +316,8 @@ class PaymentServiceTest {
         when(paymentRepository.existsByVnpayTxnRef("CUSTOM_REF")).thenReturn(false);
 
         // ACT
-        String result = paymentService.createVNPayPaymentUrl(1L, "http://custom.com", "0:0:0:0:0:0:0:1", "NCB", "CUSTOM_REF");
+        String result = paymentService.createVNPayPaymentUrl(1L, "http://custom.com", "0:0:0:0:0:0:0:1", "NCB",
+                "CUSTOM_REF");
 
         // ASSERT
         assertTrue(result.startsWith("https://pay.test?"));
@@ -432,7 +436,7 @@ class PaymentServiceTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = PaymentStatus.class, names = {"PENDING", "FAILED"})
+    @EnumSource(value = PaymentStatus.class, names = { "PENDING", "FAILED" })
     void processRefund_notSuccessfulPayment_throwsException(PaymentStatus status) {
         // ARRANGE
         when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment(status, BookingStatus.PENDING_PAYMENT)));

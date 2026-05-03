@@ -47,7 +47,16 @@ class BookingControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(bookingController).setValidator(new org.springframework.validation.Validator() { public boolean supports(Class<?> c) { return true; } public void validate(Object o, org.springframework.validation.Errors e) {} }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(bookingController)
+                .setValidator(new org.springframework.validation.Validator() {
+                    public boolean supports(Class<?> c) {
+                        return true;
+                    }
+
+                    public void validate(Object o, org.springframework.validation.Errors e) {
+                    }
+                }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver())
+                .build();
         bookingDTO = new BookingDTO();
         bookingDTO.setId(1L);
         bookingDTO.setBookingCode("B-123");
@@ -62,8 +71,6 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
     }
-
-
 
     @Test
     @DisplayName("Should create booking")
@@ -88,7 +95,8 @@ class BookingControllerTest {
         BookingCreateRequest request = new BookingCreateRequest();
         request.setCourtId(1L);
 
-        when(bookingService.createBooking(any(BookingCreateRequest.class), eq(1L))).thenThrow(new RuntimeException("Error"));
+        when(bookingService.createBooking(any(BookingCreateRequest.class), eq(1L)))
+                .thenThrow(new RuntimeException("Error"));
 
         mockMvc.perform(post("/api/bookings")
                 .requestAttr("userId", 1L)
@@ -144,7 +152,8 @@ class BookingControllerTest {
     @Test
     @DisplayName("Should handle exception when get my bookings")
     void testGetMyBookings_Exception() throws Exception {
-        when(bookingService.getCustomerBookingHistory(eq(1L), any(Pageable.class))).thenThrow(new RuntimeException("Error"));
+        when(bookingService.getCustomerBookingHistory(eq(1L), any(Pageable.class)))
+                .thenThrow(new RuntimeException("Error"));
 
         mockMvc.perform(get("/api/bookings/my-bookings")
                 .requestAttr("userId", 1L))
@@ -166,7 +175,8 @@ class BookingControllerTest {
     @Test
     @DisplayName("Should handle exception when get owner pending bookings")
     void testGetOwnerPendingBookings_Exception() throws Exception {
-        when(bookingService.getOwnerPendingBookings(eq(1L), any(Pageable.class))).thenThrow(new RuntimeException("Error"));
+        when(bookingService.getOwnerPendingBookings(eq(1L), any(Pageable.class)))
+                .thenThrow(new RuntimeException("Error"));
 
         mockMvc.perform(get("/api/bookings/owner/pending-bookings")
                 .requestAttr("userId", 1L))

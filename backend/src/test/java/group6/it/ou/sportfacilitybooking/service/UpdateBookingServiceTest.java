@@ -1,4 +1,4 @@
-package group6.it.ou.sportfacilitybooking;
+package group6.it.ou.sportfacilitybooking.service;
 
 import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
 import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
@@ -82,7 +82,8 @@ public class UpdateBookingServiceTest {
 
         // ASSERT
         assertEquals("Customer not found", ex.getMessage());
-        verifyNoInteractions(courtRepository, timeSlotRepository, bookingRepository, notificationRepository, bookingMapper);
+        verifyNoInteractions(courtRepository, timeSlotRepository, bookingRepository, notificationRepository,
+                bookingMapper);
     }
 
     @Test
@@ -220,7 +221,8 @@ public class UpdateBookingServiceTest {
         arrangeSuccessfulCreateBooking(request, timeSlot(LocalTime.of(13, 0)), expectedDto);
 
         try (MockedStatic<LocalTime> localTimeMock = Mockito.mockStatic(LocalTime.class, Mockito.CALLS_REAL_METHODS);
-             MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+                MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class,
+                        Mockito.CALLS_REAL_METHODS)) {
             localTimeMock.when(LocalTime::now).thenReturn(fixedNow);
             localDateTimeMock.when(LocalDateTime::now).thenReturn(fixedDateTimeNow);
 
@@ -241,7 +243,8 @@ public class UpdateBookingServiceTest {
         BookingCreateRequest request = request(bookingDate);
         arrangeFoundEntities(timeSlot(LocalTime.of(10, 0)));
 
-        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class,
+                Mockito.CALLS_REAL_METHODS)) {
             localDateTimeMock.when(LocalDateTime::now).thenReturn(fixedDateTimeNow);
 
             // ACT
@@ -265,8 +268,8 @@ public class UpdateBookingServiceTest {
 
         arrangeSuccessfulCreateBooking(request, timeSlot(LocalTime.of(10, 0)), expectedDto);
 
-        try (MockedStatic<LocalDateTime> localDateTimeMock =
-                     Mockito.mockStatic(LocalDateTime.class, Mockito.CALLS_REAL_METHODS)) {
+        try (MockedStatic<LocalDateTime> localDateTimeMock = Mockito.mockStatic(LocalDateTime.class,
+                Mockito.CALLS_REAL_METHODS)) {
             localDateTimeMock.when(LocalDateTime::now).thenReturn(fixedDateTimeNow);
 
             // ACT
@@ -284,7 +287,8 @@ public class UpdateBookingServiceTest {
         // ARRANGE
         BookingCreateRequest request = request(LocalDate.now().plusDays(1));
         arrangeFoundEntities(timeSlot(LocalTime.of(9, 0)));
-        when(bookingRepository.countConflictingBookings(COURT_ID, request.getBookingDate(), TIME_SLOT_ID)).thenReturn(1L);
+        when(bookingRepository.countConflictingBookings(COURT_ID, request.getBookingDate(), TIME_SLOT_ID))
+                .thenReturn(1L);
 
         // ACT
         RuntimeException ex = assertThrows(RuntimeException.class,
@@ -301,7 +305,8 @@ public class UpdateBookingServiceTest {
         // ARRANGE
         BookingCreateRequest request = request(LocalDate.now().plusDays(1));
         arrangeFoundEntities(timeSlot(LocalTime.of(9, 0)));
-        when(bookingRepository.countConflictingBookings(COURT_ID, request.getBookingDate(), TIME_SLOT_ID)).thenReturn(0L);
+        when(bookingRepository.countConflictingBookings(COURT_ID, request.getBookingDate(), TIME_SLOT_ID))
+                .thenReturn(0L);
         when(courtRepository.findOwnerIdByCourtId(COURT_ID)).thenReturn(Optional.empty());
 
         // ACT
@@ -465,9 +470,11 @@ public class UpdateBookingServiceTest {
         verifyCancelNotificationCreated(booking);
     }
 
-    private void arrangeSuccessfulCreateBooking(BookingCreateRequest request, TimeSlot timeSlot, BookingDTO expectedDto) {
+    private void arrangeSuccessfulCreateBooking(BookingCreateRequest request, TimeSlot timeSlot,
+            BookingDTO expectedDto) {
         arrangeFoundEntities(timeSlot);
-        when(bookingRepository.countConflictingBookings(COURT_ID, request.getBookingDate(), TIME_SLOT_ID)).thenReturn(0L);
+        when(bookingRepository.countConflictingBookings(COURT_ID, request.getBookingDate(), TIME_SLOT_ID))
+                .thenReturn(0L);
         when(courtRepository.findOwnerIdByCourtId(COURT_ID)).thenReturn(Optional.of(OWNER_ID));
         when(bookingMapper.toDTO(any(Booking.class))).thenReturn(expectedDto);
     }

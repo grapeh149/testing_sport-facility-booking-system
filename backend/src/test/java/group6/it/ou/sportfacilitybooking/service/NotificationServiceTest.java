@@ -1,4 +1,4 @@
-package group6.it.ou.sportfacilitybooking;
+package group6.it.ou.sportfacilitybooking.service;
 
 import group6.it.ou.sportfacilitybooking.dto.NotificationDTO;
 import group6.it.ou.sportfacilitybooking.entity.Notification;
@@ -39,7 +39,7 @@ class NotificationServiceTest {
         notification.setTitle("Hello");
 
         when(notificationRepository.findByUserId(1L, PageRequest.of(0, 10)))
-            .thenReturn(new PageImpl<>(List.of(notification)));
+                .thenReturn(new PageImpl<>(List.of(notification)));
         when(notificationMapper.toDTO(notification)).thenReturn(new NotificationDTO());
 
         var page = notificationService.getNotifications(1L, PageRequest.of(0, 10));
@@ -77,7 +77,7 @@ class NotificationServiceTest {
         when(notificationRepository.findById(3L)).thenReturn(Optional.of(notification));
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-            () -> notificationService.markAsRead(3L, 2L));
+                () -> notificationService.markAsRead(3L, 2L));
 
         assertEquals("Permission denied", exception.getMessage());
         verify(notificationRepository, never()).save(any());
@@ -94,7 +94,7 @@ class NotificationServiceTest {
         second.setIsRead(false);
 
         when(notificationRepository.findTop10ByUserIdOrderByCreatedAtDesc(1L))
-            .thenReturn(List.of(first, second));
+                .thenReturn(List.of(first, second));
 
         notificationService.markAllAsRead(1L);
 

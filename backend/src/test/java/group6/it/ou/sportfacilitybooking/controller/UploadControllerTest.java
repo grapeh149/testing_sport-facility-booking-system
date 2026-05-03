@@ -1,205 +1,54 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import group6.it.ou.sportfacilitybooking.dto.UserDTO;
-import group6.it.ou.sportfacilitybooking.dto.UserRegistrationRequest;
-import group6.it.ou.sportfacilitybooking.service.UserService;
+import group6.it.ou.sportfacilitybooking.service.CloudinaryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@org.junit.jupiter.api.extension.ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
-@DisplayName("UserController Unit Tests")
-class UserControllerTest {
+@ExtendWith(MockitoExtension.class)
+@DisplayName("UploadController Unit Tests")
+class UploadControllerTest {
+
+    @Mock
+    private CloudinaryService cloudinaryService;
 
     @InjectMocks
-    private UserController userController;
+    private UploadController uploadController;
 
     private MockMvc mockMvc;
 
-    @Mock
-    private UserService userService;
-
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    private UserDTO userDTO;
-
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(userController).setValidator(new org.springframework.validation.Validator() { public boolean supports(Class<?> c) { return true; } public void validate(Object o, org.springframework.validation.Errors e) {} }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver()).build();
-        userDTO = new UserDTO();
-        userDTO.setId(1L);
-        userDTO.setFullName("Test User");
+        mockMvc = MockMvcBuilders.standaloneSetup(uploadController).build();
     }
 
     @Test
-    @DisplayName("Should create user")
-    void testCreateUser() throws Exception {
-        UserRegistrationRequest request = new UserRegistrationRequest();
-        request.setFullName("Test User");
+    @DisplayName("Should upload file successfully")
+    void testUpload() throws Exception {
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "test.jpg",
+                "image/jpeg",
+                "test image content".getBytes());
 
-        when(userService.createUser(any(UserRegistrationRequest.class))).thenReturn(userDTO);
+        when(cloudinaryService.uploadFile(any(MultipartFile.class))).thenReturn("http://cloudinary.com/test.jpg");
 
-        mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+        mockMvc.perform(multipart("/api/upload").file(file))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
-    }
-
-    @Test
-    @DisplayName("Should handle exception when create user")
-    void testCreateUser_Exception() throws Exception {
-        UserRegistrationRequest request = new UserRegistrationRequest();
-        request.setFullName("Test User");
-
-        when(userService.createUser(any(UserRegistrationRequest.class))).thenThrow(new RuntimeException("Error"));
-
-        mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
-
-    @Test
-    @DisplayName("Should get user profile")
-    void testGetProfile() throws Exception {
-        when(userService.getUserProfile(1L)).thenReturn(userDTO);
-
-        mockMvc.perform(get("/api/users/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
-    }
-
-    @Test
-    @DisplayName("Should handle exception when get user profile")
-    void testGetProfile_Exception() throws Exception {
-        when(userService.getUserProfile(1L)).thenThrow(new RuntimeException("Error"));
-
-        mockMvc.perform(get("/api/users/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
-
-    @Test
-    @DisplayName("Should update user profile")
-    void testUpdateProfile() throws Exception {
-        when(userService.updateUserProfile(eq(1L), any(UserDTO.class))).thenReturn(userDTO);
-
-        mockMvc.perform(put("/api/users/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
-    }
-
-    @Test
-    @DisplayName("Should handle exception when update user profile")
-    void testUpdateProfile_Exception() throws Exception {
-        when(userService.updateUserProfile(eq(1L), any(UserDTO.class))).thenThrow(new RuntimeException("Error"));
-
-        mockMvc.perform(put("/api/users/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
-
-    @Test
-    @DisplayName("Should get all users")
-    void testGetAllUsers() throws Exception {
-        List<UserDTO> userList = List.of(userDTO);
-        Page<UserDTO> page = new PageImpl<>(userList);
-        when(userService.getAllUsers(any(Pageable.class))).thenReturn(page);
-
-        mockMvc.perform(get("/api/users")
-                .param("page", "0")
-                .param("size", "10"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
-    }
-
-    @Test
-    @DisplayName("Should handle exception when get all users")
-    void testGetAllUsers_Exception() throws Exception {
-        when(userService.getAllUsers(any(Pageable.class))).thenThrow(new RuntimeException("Error"));
-
-        mockMvc.perform(get("/api/users")
-                .param("page", "0")
-                .param("size", "10"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
-
-    @Test
-    @DisplayName("Should deactivate user")
-    void testDeactivateUser() throws Exception {
-        mockMvc.perform(delete("/api/users/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
-    }
-
-    @Test
-    @DisplayName("Should handle exception when deactivate user")
-    void testDeactivateUser_Exception() throws Exception {
-        doThrow(new RuntimeException("Error")).when(userService).deactivateUser(1L);
-
-        mockMvc.perform(delete("/api/users/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
-
-    @Test
-    @DisplayName("Should lock user")
-    void testLockUser() throws Exception {
-        mockMvc.perform(put("/api/users/1/lock"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
-    }
-
-    @Test
-    @DisplayName("Should handle exception when lock user")
-    void testLockUser_Exception() throws Exception {
-        doThrow(new RuntimeException("Error")).when(userService).deactivateUser(1L);
-
-        mockMvc.perform(put("/api/users/1/lock"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
-
-    @Test
-    @DisplayName("Should unlock user")
-    void testUnlockUser() throws Exception {
-        mockMvc.perform(put("/api/users/1/unlock"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
-    }
-
-    @Test
-    @DisplayName("Should handle exception when unlock user")
-    void testUnlockUser_Exception() throws Exception {
-        doThrow(new RuntimeException("Error")).when(userService).activateUser(1L);
-
-        mockMvc.perform(put("/api/users/1/unlock"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
+                .andExpect(content().string("http://cloudinary.com/test.jpg"));
     }
 }

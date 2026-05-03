@@ -1,4 +1,4 @@
-package group6.it.ou.sportfacilitybooking;
+package group6.it.ou.sportfacilitybooking.service;
 
 import group6.it.ou.sportfacilitybooking.dto.CheckInDTO;
 import group6.it.ou.sportfacilitybooking.dto.CheckInRequest;

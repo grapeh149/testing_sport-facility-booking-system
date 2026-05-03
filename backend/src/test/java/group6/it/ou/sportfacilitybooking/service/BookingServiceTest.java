@@ -1,4 +1,4 @@
-package group6.it.ou.sportfacilitybooking;
+package group6.it.ou.sportfacilitybooking.service;
 
 import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
 import group6.it.ou.sportfacilitybooking.entity.Booking;
@@ -34,23 +34,30 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GetBookingServiceTest {
+public class BookingServiceTest {
 
-    @Mock private BookingRepository bookingRepository;
-    @Mock private CourtRepository courtRepository;
-    @Mock private TimeSlotRepository timeSlotRepository;
-    @Mock private UserRepository userRepository;
-    @Mock private NotificationRepository notificationRepository;
-    @Mock private ReviewRepository reviewRepository;
-    @Mock private BookingMapper bookingMapper;
+    @Mock
+    private BookingRepository bookingRepository;
+    @Mock
+    private CourtRepository courtRepository;
+    @Mock
+    private TimeSlotRepository timeSlotRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private NotificationRepository notificationRepository;
+    @Mock
+    private ReviewRepository reviewRepository;
+    @Mock
+    private BookingMapper bookingMapper;
 
     @InjectMocks
     private BookingService bookingService;
 
     private static final Long BOOKING_ID = 1L;
     private static final Long CUSTOMER_ID = 2L;
-    private static final Long COURT_ID   = 3L;
-    private static final Long OWNER_ID   = 4L;
+    private static final Long COURT_ID = 3L;
+    private static final Long OWNER_ID = 4L;
     private static final Pageable PAGEABLE = PageRequest.of(0, 10);
 
     // ─── getBookingById ───────────────────────────────────────────────────────
@@ -183,7 +190,7 @@ public class GetBookingServiceTest {
     // TC10 — D1=T và D1=F: 1 quá khứ + 1 tương lai → chỉ trả booking tương lai
     @Test
     void getCourtBookings_mixedDates_onlyFutureReturned() {
-        Booking pastBooking   = bookingWithDate(LocalDate.now().minusDays(1));
+        Booking pastBooking = bookingWithDate(LocalDate.now().minusDays(1));
         Booking futureBooking = bookingWithDate(LocalDate.now().plusDays(1));
         BookingDTO dto = new BookingDTO();
         when(bookingRepository.findByCourtIdOrderByBookingDateAscStartTimeAsc(COURT_ID))
@@ -242,7 +249,8 @@ public class GetBookingServiceTest {
         assertFalse(result.getContent().get(0).getHasReview());
     }
 
-    // TC14 — D1=T và D1=F: 2 bookings, 1 có review 1 không → hasReview đúng từng item
+    // TC14 — D1=T và D1=F: 2 bookings, 1 có review 1 không → hasReview đúng từng
+    // item
     @Test
     void getCustomerBookingHistory_mixedReviews_hasReviewSetCorrectlyPerItem() {
         Booking b1 = booking(1L);

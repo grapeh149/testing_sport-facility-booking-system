@@ -1,4 +1,4 @@
-package group6.it.ou.sportfacilitybooking;
+package group6.it.ou.sportfacilitybooking.service;
 
 import group6.it.ou.sportfacilitybooking.dto.UserDTO;
 import group6.it.ou.sportfacilitybooking.dto.UserRegistrationRequest;
@@ -75,7 +75,7 @@ class UserServiceTest {
         when(userRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(new User()));
 
         RuntimeException exception = assertThrows(RuntimeException.class,
-            () -> userService.createUser(request));
+                () -> userService.createUser(request));
 
         assertEquals("Email đã được đăng ký", exception.getMessage());
         verify(userRepository, never()).save(any());
