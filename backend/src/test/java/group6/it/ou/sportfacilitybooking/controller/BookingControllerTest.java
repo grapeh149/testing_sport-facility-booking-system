@@ -25,10 +25,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
-import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
-import group6.it.ou.sportfacilitybooking.service.BookingService;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+>>>>>>> 260a21cb11e2f1691bb37b7834f38dd21589b8fe
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BookingController Unit Tests")
@@ -108,17 +112,20 @@ class BookingControllerTest {
                 .andExpect(jsonPath("$.success").value(false));
     }
 
-    // @Test
-    // @DisplayName("Should handle create booking without userId")
-    // void testCreateBooking_NoUserId() throws Exception {
-    //     BookingCreateRequest request = new BookingCreateRequest();
+    @Test
+    @DisplayName("Should handle create booking without userId")
+    void testCreateBooking_NoUserId() throws Exception {
+        BookingCreateRequest request = new BookingCreateRequest();
 
-    //     mockMvc.perform(post("/api/bookings")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //             .content(objectMapper.writeValueAsString(request)))
-    //             .andExpect(status().isOk())
-    //             .andExpect(jsonPath("$.success").value(false));
-    // }
+        when(bookingService.createBooking(any(BookingCreateRequest.class), isNull()))
+                .thenThrow(new RuntimeException("Không xác định được người dùng"));
+
+        mockMvc.perform(post("/api/bookings")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+    }
 
     @Test
     @DisplayName("Should get booking by code")
