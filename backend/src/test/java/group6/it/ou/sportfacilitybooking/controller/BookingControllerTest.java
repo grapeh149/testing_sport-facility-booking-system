@@ -24,6 +24,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -110,6 +111,9 @@ class BookingControllerTest {
     @DisplayName("Should handle create booking without userId")
     void testCreateBooking_NoUserId() throws Exception {
         BookingCreateRequest request = new BookingCreateRequest();
+
+        when(bookingService.createBooking(any(BookingCreateRequest.class), isNull()))
+                .thenThrow(new RuntimeException("Không xác định được người dùng"));
 
         mockMvc.perform(post("/api/bookings")
                 .contentType(MediaType.APPLICATION_JSON)
