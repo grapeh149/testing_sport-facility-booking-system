@@ -57,7 +57,7 @@ class UserControllerTest {
 
                     public void validate(Object o, org.springframework.validation.Errors e) {
                     }
-                }).setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver())
                 .build();
         userDTO = new UserDTO();
         userDTO.setId(1L);
