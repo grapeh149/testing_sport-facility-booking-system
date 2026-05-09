@@ -1,4 +1,7 @@
 package group6.it.ou.sportfacilitybooking.controller;
+import group6.it.ou.sportfacilitybooking.dto.BookingCreateRequest;
+import group6.it.ou.sportfacilitybooking.dto.BookingDTO;
+import group6.it.ou.sportfacilitybooking.service.BookingService;
 
 import java.util.List;
 
@@ -6,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
@@ -32,7 +36,6 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
->>>>>>> 260a21cb11e2f1691bb37b7834f38dd21589b8fe
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BookingController Unit Tests")

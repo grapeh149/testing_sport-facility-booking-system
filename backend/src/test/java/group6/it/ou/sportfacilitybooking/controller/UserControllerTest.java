@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -132,31 +134,31 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.success").value(false));
     }
 
-    // @Test
-    // @DisplayName("Should get all users")
-    // void testGetAllUsers() throws Exception {
-    //     List<UserDTO> userList = List.of(userDTO);
-    //     Page<UserDTO> page = new PageImpl<>(userList);
-    //     when(userService.getAllUsers(any(Pageable.class))).thenReturn(page);
+    @Test
+    @DisplayName("Should get all users")
+    void testGetAllUsers() throws Exception {
+        List<UserDTO> userList = List.of(userDTO);
+        Page<UserDTO> page = new PageImpl<>(userList);
+        when(userService.getAllUsers(any(Pageable.class))).thenReturn(page);
 
-    //     mockMvc.perform(get("/api/users")
-    //             .param("page", "0")
-    //             .param("size", "10"))
-    //             .andExpect(status().isOk())
-    //             .andExpect(jsonPath("$.success").value(true));
-    // }
+        mockMvc.perform(get("/api/users")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+    }
 
-    // @Test
-    // @DisplayName("Should handle exception when get all users")
-    // void testGetAllUsers_Exception() throws Exception {
-    //     when(userService.getAllUsers(any(Pageable.class))).thenThrow(new RuntimeException("Error"));
+    @Test
+    @DisplayName("Should handle exception when get all users")
+    void testGetAllUsers_Exception() throws Exception {
+        when(userService.getAllUsers(any(Pageable.class))).thenThrow(new RuntimeException("Error"));
 
-    //     mockMvc.perform(get("/api/users")
-    //             .param("page", "0")
-    //             .param("size", "10"))
-    //             .andExpect(status().isOk())
-    //             .andExpect(jsonPath("$.success").value(false));
-    // }
+        mockMvc.perform(get("/api/users")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+    }
 
     @Test
     @DisplayName("Should deactivate user")
