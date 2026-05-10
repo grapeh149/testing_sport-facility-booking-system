@@ -1,29 +1,30 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
-import group6.it.ou.sportfacilitybooking.dto.NotificationDTO;
-import group6.it.ou.sportfacilitybooking.service.NotificationService;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.mockito.Mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import group6.it.ou.sportfacilitybooking.dto.NotificationDTO;
+import group6.it.ou.sportfacilitybooking.service.NotificationService;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("NotificationController Unit Tests")
@@ -41,9 +42,6 @@ class NotificationControllerTest {
 
     @BeforeEach
     void setUp() {
-<<<<<<< HEAD
-        mockMvc = MockMvcBuilders.standaloneSetup(notificationController).setValidator(new org.springframework.validation.Validator() { public boolean supports(Class<?> c) { return true; } public void validate(Object o, org.springframework.validation.Errors e) {} }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver()).build();
-=======
         mockMvc = MockMvcBuilders.standaloneSetup(notificationController)
                 .setValidator(new org.springframework.validation.Validator() {
                     public boolean supports(Class<?> c) {
@@ -54,7 +52,6 @@ class NotificationControllerTest {
                     }
                 }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver())
                 .build();
->>>>>>> 961fbb9dbae68a517579a9650f62da364314536b
         notificationDTO = new NotificationDTO();
         notificationDTO.setId(1L);
         notificationDTO.setMessage("Test message");
@@ -75,12 +72,8 @@ class NotificationControllerTest {
     @Test
     @DisplayName("Should handle exception when get notifications")
     void testGetNotifications_Exception() throws Exception {
-<<<<<<< HEAD
-        when(notificationService.getNotifications(eq(1L), any(Pageable.class))).thenThrow(new RuntimeException("Error"));
-=======
         when(notificationService.getNotifications(eq(1L), any(Pageable.class)))
                 .thenThrow(new RuntimeException("Error"));
->>>>>>> 961fbb9dbae68a517579a9650f62da364314536b
 
         mockMvc.perform(get("/api/notifications")
                 .requestAttr("userId", 1L))
