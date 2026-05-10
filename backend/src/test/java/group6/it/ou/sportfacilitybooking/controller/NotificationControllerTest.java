@@ -41,6 +41,9 @@ class NotificationControllerTest {
 
     @BeforeEach
     void setUp() {
+<<<<<<< HEAD
+        mockMvc = MockMvcBuilders.standaloneSetup(notificationController).setValidator(new org.springframework.validation.Validator() { public boolean supports(Class<?> c) { return true; } public void validate(Object o, org.springframework.validation.Errors e) {} }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver()).build();
+=======
         mockMvc = MockMvcBuilders.standaloneSetup(notificationController)
                 .setValidator(new org.springframework.validation.Validator() {
                     public boolean supports(Class<?> c) {
@@ -51,6 +54,7 @@ class NotificationControllerTest {
                     }
                 }).setCustomArgumentResolvers(new org.springframework.data.web.PageableHandlerMethodArgumentResolver())
                 .build();
+>>>>>>> 961fbb9dbae68a517579a9650f62da364314536b
         notificationDTO = new NotificationDTO();
         notificationDTO.setId(1L);
         notificationDTO.setMessage("Test message");
@@ -71,8 +75,12 @@ class NotificationControllerTest {
     @Test
     @DisplayName("Should handle exception when get notifications")
     void testGetNotifications_Exception() throws Exception {
+<<<<<<< HEAD
+        when(notificationService.getNotifications(eq(1L), any(Pageable.class))).thenThrow(new RuntimeException("Error"));
+=======
         when(notificationService.getNotifications(eq(1L), any(Pageable.class)))
                 .thenThrow(new RuntimeException("Error"));
+>>>>>>> 961fbb9dbae68a517579a9650f62da364314536b
 
         mockMvc.perform(get("/api/notifications")
                 .requestAttr("userId", 1L))
