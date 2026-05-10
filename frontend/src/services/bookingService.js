@@ -53,6 +53,13 @@ const bookingService = {
   cancelBooking: (id) => {
     return apiClient.delete(`/api/bookings/${id}`);
   },
+
+  // Xác nhận thanh toán VNPay
+  confirmPayment: (vnpTxnRef) => {
+    return apiClient.post('/api/payments/vnpay/confirm', {}, {
+      params: { vnpTxnRef }
+    });
+  },
 };
 
 export default bookingService;

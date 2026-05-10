@@ -21,10 +21,10 @@ import java.util.Map;
 @RequestMapping("/api/facilities")
 @CrossOrigin(origins = "*")
 public class FacilityController {
-    
+
     @Autowired
     private FacilityService facilityService;
-    
+
     @GetMapping
     public ApiResponse<Map<String, Object>> searchFacilities(
             @RequestParam(defaultValue = "0") int page,
@@ -33,7 +33,7 @@ public class FacilityController {
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<FacilityDTO> result = facilityService.searchFacilitiesWithPagination(search, pageable);
-            
+
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("content", result.getContent());
             responseData.put("currentPage", result.getNumber());
@@ -41,13 +41,13 @@ public class FacilityController {
             responseData.put("totalElements", result.getTotalElements());
             responseData.put("hasNextPage", result.hasNext());
             responseData.put("hasPreviousPage", result.hasPrevious());
-            
+
             return new ApiResponse<>(true, responseData, "Tìm kiếm sân thành công");
         } catch (Exception e) {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-    
+
     @GetMapping("/{id}")
     public ApiResponse<FacilityDTO> getFacilityDetails(@PathVariable Long id) {
         try {
@@ -95,10 +95,10 @@ public class FacilityController {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-    
+
     @PostMapping
     public ApiResponse<FacilityDTO> createFacility(@Valid @RequestBody FacilityCreateRequest request,
-                                                     @RequestParam Long ownerId) {
+            @RequestParam Long ownerId) {
         try {
             FacilityDTO result = facilityService.createFacility(request, ownerId);
             return new ApiResponse<>(true, result, "Tạo sân thành công");
@@ -106,9 +106,10 @@ public class FacilityController {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-    
+
     @PutMapping("/{id}")
-    public ApiResponse<FacilityDTO> updateFacility(@PathVariable Long id, @Valid @RequestBody FacilityCreateRequest request) {
+    public ApiResponse<FacilityDTO> updateFacility(@PathVariable Long id,
+            @Valid @RequestBody FacilityCreateRequest request) {
         try {
             FacilityDTO result = facilityService.updateFacility(id, request);
             return new ApiResponse<>(true, result, "Cập nhật sân thành công");
@@ -123,6 +124,9 @@ public class FacilityController {
             @RequestBody Map<String, String> request) {
         try {
             String coverImageUrl = request.get("coverImageUrl");
+            if (coverImageUrl == null || coverImageUrl.trim().isEmpty()) {
+                return new ApiResponse<>(false, null, "URL ảnh bìa không được để trống");
+            }
             FacilityDTO result = facilityService.updateFacilityCoverImage(id, coverImageUrl);
             return new ApiResponse<>(true, result, "Cập nhật ảnh bìa thành công");
         } catch (Exception e) {
@@ -139,7 +143,7 @@ public class FacilityController {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-    
+
     @PostMapping("/{id}/approve")
     public ApiResponse<?> approveFacility(@PathVariable Long id, @RequestParam Long adminId) {
         try {
@@ -149,9 +153,10 @@ public class FacilityController {
             return new ApiResponse<>(false, null, e.getMessage());
         }
     }
-    
+
     @PostMapping("/{id}/reject")
-    public ApiResponse<?> rejectFacility(@PathVariable Long id, @RequestParam Long adminId, @RequestParam String reason) {
+    public ApiResponse<?> rejectFacility(@PathVariable Long id, @RequestParam Long adminId,
+            @RequestParam String reason) {
         try {
             facilityService.rejectFacility(id, adminId, reason);
             return new ApiResponse<>(true, null, "Từ chối sân thành công");

@@ -20,12 +20,12 @@ import group6.it.ou.sportfacilitybooking.service.AuthService;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-    
+
     @Autowired
     private AuthService authService;
-    
+
     @PostMapping("/register")
     public ApiResponse<AuthResponse> register(@Valid @RequestBody UserRegistrationRequest request) {
         try {
@@ -38,7 +38,7 @@ public class AuthController {
             return new ApiResponse<>(false, null, "Đăng ký thất bại: " + e.getMessage());
         }
     }
-    
+
     @PostMapping("/login")
     public ApiResponse<AuthResponse> login(@Valid @RequestBody UserLoginRequest request) {
         try {
@@ -51,7 +51,7 @@ public class AuthController {
             return new ApiResponse<>(false, null, "Đăng nhập thất bại: " + e.getMessage());
         }
     }
-    
+
     @PostMapping("/change-password")
     public ApiResponse<UserDTO> changePassword(
             @RequestParam Long userId,
@@ -67,11 +67,14 @@ public class AuthController {
             return new ApiResponse<>(false, null, "Đổi mật khẩu thất bại: " + e.getMessage());
         }
     }
-    
+
     @GetMapping("/profile")
     public ApiResponse<UserDTO> getProfile(HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
+            if (userId == null) {
+                return new ApiResponse<>(false, null, "Không tìm thấy thông tin user");
+            }
             logger.info("[API] GET /api/auth/profile - User ID: {}", userId);
             UserDTO result = authService.getProfile(userId);
             return new ApiResponse<>(true, result, "Lấy thông tin profile thành công");
@@ -80,13 +83,16 @@ public class AuthController {
             return new ApiResponse<>(false, null, "Lấy thông tin profile thất bại: " + e.getMessage());
         }
     }
-    
+
     @PutMapping("/profile")
     public ApiResponse<UserDTO> updateProfile(
             @Valid @RequestBody UpdateProfileRequest request,
             HttpServletRequest httpRequest) {
         try {
             Long userId = (Long) httpRequest.getAttribute("userId");
+            if (userId == null) {
+                return new ApiResponse<>(false, null, "Không tìm thấy thông tin user");
+            }
             logger.info("[API] PUT /api/auth/profile - User ID: {}", userId);
             UserDTO result = authService.updateProfile(userId, request);
             logger.info("[API] Profile updated successfully for user: {}", userId);
@@ -96,13 +102,16 @@ public class AuthController {
             return new ApiResponse<>(false, null, "Cập nhật profile thất bại: " + e.getMessage());
         }
     }
-    
+
     @PostMapping("/update-password")
     public ApiResponse<UserDTO> updatePassword(
             @Valid @RequestBody UpdatePasswordRequest request,
             HttpServletRequest httpRequest) {
         try {
             Long userId = (Long) httpRequest.getAttribute("userId");
+            if (userId == null) {
+                return new ApiResponse<>(false, null, "Không tìm thấy thông tin user");
+            }
             logger.info("[API] POST /api/auth/update-password - User ID: {}", userId);
             UserDTO result = authService.updatePassword(userId, request);
             logger.info("[API] Password updated successfully for user: {}", userId);
