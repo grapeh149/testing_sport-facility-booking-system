@@ -58,6 +58,7 @@ class UserControllerTest {
         userDTO.setFullName("Test User");
     }
 
+
     @Test
     @DisplayName("Should create user")
     void testCreateUser() throws Exception {
