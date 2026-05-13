@@ -1,5 +1,19 @@
 package group6.it.ou.sportfacilitybooking.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import group6.it.ou.sportfacilitybooking.dto.ReviewCreateRequest;
 import group6.it.ou.sportfacilitybooking.dto.ReviewDTO;
 import group6.it.ou.sportfacilitybooking.entity.Booking;
@@ -13,19 +27,6 @@ import group6.it.ou.sportfacilitybooking.repository.BookingRepository;
 import group6.it.ou.sportfacilitybooking.repository.FacilityRepository;
 import group6.it.ou.sportfacilitybooking.repository.ReviewRepository;
 import group6.it.ou.sportfacilitybooking.repository.UserRepository;
-import group6.it.ou.sportfacilitybooking.service.ReviewService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReviewServiceTest {
@@ -101,6 +102,7 @@ class ReviewServiceTest {
         verify(reviewRepository).save(any(Review.class));
         verify(facilityRepository).save(facility);
     }
+
 
     @Test
     void replyToReview_shouldUpdateReviewOwnerReply() {

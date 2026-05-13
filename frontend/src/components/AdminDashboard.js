@@ -467,7 +467,7 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <Container fluid className="py-4">
+    <Container fluid className="py-4 admin-dashboard-page">
       <Row className="mb-4">
         <Col>
           <h2 className="mb-1">Admin Dashboard</h2>
