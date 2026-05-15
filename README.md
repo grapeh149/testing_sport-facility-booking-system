@@ -17,6 +17,7 @@ The project is developed with:
 - **Database:** Azure SQL Server Database
 
 Project Structure Tree:
+```
 sport-facility-booking/
 │
 ├── frontend/                     # ReactJS Frontend
