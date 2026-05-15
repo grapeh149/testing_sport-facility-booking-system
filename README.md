@@ -16,6 +16,48 @@ The project is developed with:
 - **Frontend:** ReactJS, Bootstrap 5
 - **Database:** Azure SQL Server Database
 
+Project Structure Tree:
+sport-facility-booking/
+│
+├── frontend/                     # ReactJS Frontend
+│   ├── public/
+│   ├── src/
+│   │   ├── components/           # Reusable UI components
+│   │   ├── services/             # API calling layer
+│   │   ├── context/              # Global state/context
+|   |   ├── App.js
+|   |   ├── App.css
+|   └── package.json
+│
+├── backend/                      # Spring Boot REST API
+│   ├── src/main/java/it/ou/sportfacilitybooking
+│   │   ├── controller/           # REST Controllers
+│   │   ├── service/              # Business logic
+│   │   ├── repository/           # JPA repositories
+│   │   ├── entity/               # Database entities
+│   │   ├── dto/                  # Request/Response DTO
+│   │   ├── mapper/               # Mapper
+│   │   ├── config/               # Security & configuration
+│   │   ├── exception/            # Global exception handling
+│   │   └── scheduler/            # Booking scheduler
+│   │
+│   ├── src/test/                 # Backend unit tests
+│   └── pom.xml
+│
+├── database/
+|
+│
+├── docs/
+│   ├── test-plan.md
+│   ├── test-report.md
+│   ├── test-summary.md
+│   └── screenshots/
+│
+├── weekly-report/
+|
+├── README.md
+└── docker-compose.yml
+```
 ---
 
 # 1. Technologies Used
