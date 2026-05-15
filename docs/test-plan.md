@@ -208,16 +208,8 @@ Không bao gồm:
 | Trễ tiến độ | Ưu tiên core workflow |
 | Conflict integration | Test integration thường xuyên |
 
-<<<<<<< HEAD
-
-=======
->>>>>>> a26c1988d27db29d73bc4cffdbf007ba806b1f13
 ---
 
 # 14. Kết luận
+Tài liệu Test Plan này được xây dựng dựa trên cấu trúc kiểm thử theo chuẩn quốc tế và định hướng IEEE nhằm đảm bảo hệ thống đặt sân thể thao được kiểm thử đầy đủ trước khi triển khai. Quá trình kiểm thử tập trung vào tính đúng đắn của nghiệp vụ, độ ổn định của hệ thống, tính nhất quán dữ liệu và khả năng phân quyền giữa các vai trò người dùng.
 
-<<<<<<< HEAD
-Tài liệu Test Plan này được xây dựng dựa trên cấu trúc kiểm thử theo chuẩn quốc tế và định hướng IEEE nhằm đảm bảo hệ thống đặt sân thể thao được kiểm thử đầy đủ trước khi triển khai. Quá trình kiểm thử tập trung vào tính đúng đắn của nghiệp vụ, độ ổn định của hệ thống, tính nhất quán dữ liệu và khả năng phân quyền giữa các vai trò người dùng.
-=======
-Tài liệu Test Plan này được xây dựng dựa trên cấu trúc kiểm thử theo chuẩn quốc tế và định hướng IEEE nhằm đảm bảo hệ thống đặt sân thể thao được kiểm thử đầy đủ trước khi triển khai. Quá trình kiểm thử tập trung vào tính đúng đắn của nghiệp vụ, độ ổn định của hệ thống, tính nhất quán dữ liệu và khả năng phân quyền giữa các vai trò người dùng.
->>>>>>> a26c1988d27db29d73bc4cffdbf007ba806b1f13
