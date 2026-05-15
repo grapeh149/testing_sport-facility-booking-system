@@ -208,23 +208,9 @@ Không bao gồm:
 | Trễ tiến độ | Ưu tiên core workflow |
 | Conflict integration | Test integration thường xuyên |
 
----
-
-# 14. Tổng hợp test case
-
-| Module | Tổng TC | Độ ưu tiên |
-|---|---|---|
-| Time Slot & Pricing | 9 | High |
-| Booking Workflow | 11 | Critical |
-| Deposit Payment | 22 | Critical |
-| Booking Approval | 8 | High |
-| Check-in | 6 | Medium |
-| Court Approval | 5 | Medium |
-| Court Type Management | 7 | Medium |
-| Tổng | 68 | — |
 
 ---
 
-# 15. Kết luận
+# 14. Kết luận
 
 Tài liệu Test Plan này được xây dựng dựa trên cấu trúc kiểm thử theo chuẩn quốc tế và định hướng IEEE nhằm đảm bảo hệ thống đặt sân thể thao được kiểm thử đầy đủ trước khi triển khai. Quá trình kiểm thử tập trung vào tính đúng đắn của nghiệp vụ, độ ổn định của hệ thống, tính nhất quán dữ liệu và khả năng phân quyền giữa các vai trò người dùng.
