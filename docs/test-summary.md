@@ -49,9 +49,9 @@ Kết quả cho thấy hệ thống hoạt động ổn định, đáp ứng cá
 
 | Kỹ thuật | Số TC |
 |----------|-------|
-| Phân vùng tương đương (EP) | 52 |
-| Phân tích giá trị biên (BVA) | 29 |
-| Bảng quyết định (DT) | 27 |
+| Phân vùng tương đương (EP) | 54 |
+| Phân tích giá trị biên (BVA) | 19 |
+| Bảng quyết định (DT) | 25 |
 | Chuyển trạng thái (ST) | 26 |
 | **Tổng** | **132** |
 
@@ -61,5 +61,5 @@ Kết quả cho thấy hệ thống hoạt động ổn định, đáp ứng cá
 
 - Tổng số test case tự động: **554** (274 BE + 280 FE), tất cả **PASSED**.
 - Độ phủ code đạt yêu cầu ở cả hai tầng.
-- 132 test case manual đã được thiết kế dựa trực tiếp trên source code thực tế (service, DTO, entity).
+- 124 test case manual đã được thiết kế dựa trực tiếp trên source code thực tế (service, DTO, entity).
 - Hệ thống sẵn sàng cho việc trình bày và bảo vệ.
