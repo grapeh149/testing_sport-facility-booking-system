@@ -53,7 +53,7 @@ Kết quả cho thấy hệ thống hoạt động ổn định, đáp ứng cá
 | Phân tích giá trị biên (BVA) | 19 |
 | Bảng quyết định (DT) | 25 |
 | Chuyển trạng thái (ST) | 26 |
-| **Tổng** | **132** |
+| **Tổng** | **124** |
 
 ---
 
