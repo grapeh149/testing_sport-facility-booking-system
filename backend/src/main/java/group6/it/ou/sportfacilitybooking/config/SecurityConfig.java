@@ -1,5 +1,7 @@
 package group6.it.ou.sportfacilitybooking.config;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -74,13 +74,26 @@ public class SecurityConfig {
                 
                 // TimeSlot endpoints - public read
                 .requestMatchers(HttpMethod.GET, "/api/timeslots/**").permitAll()
-                
+
                 // Review endpoints - public read
                 .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
                 
                 // Facility images endpoints - public read
                 .requestMatchers(HttpMethod.GET, "/api/facility-images/**").permitAll()
                 
+
+                //Only owner cancel/confirm booking
+                .requestMatchers(HttpMethod.POST, "/api/bookings/*/cancel").hasRole("OWNER")
+                .requestMatchers(HttpMethod.POST, "/api/bookings/*/cancel").hasRole("CUSTOMER")
+                
+                // Only owner can check in booking
+                .requestMatchers(HttpMethod.POST, "/api/checkins").hasRole("OWNER")
+
+                .requestMatchers(HttpMethod.POST, "/api/bookings/*/confirm").hasRole("OWNER")
+
+                // Chỉ ADMIN mới được approve/reject facility
+                .requestMatchers(HttpMethod.POST, "/api/facilities/*/approve").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/facilities/*/reject").hasRole("ADMIN")
                 // All other endpoints require authentication
                 .anyRequest().authenticated()
             );

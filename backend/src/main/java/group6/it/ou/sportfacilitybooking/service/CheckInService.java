@@ -46,6 +46,12 @@ public class CheckInService {
         User checkedByUser = userRepository.findById(checkedByUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Check if checkedByUser is the owner of the facility
+        Long facilityOwnerId = booking.getOwnerId();
+        if (facilityOwnerId != null && !facilityOwnerId.equals(checkedByUserId)) {
+            throw new RuntimeException("Chỉ chủ sân mới có thể check-in. Bạn không phải là chủ của sân này.");
+        }
+
         if (booking.getStatus() != BookingStatus.CONFIRMED) {
             throw new RuntimeException("Can only check in CONFIRMED bookings");
         }

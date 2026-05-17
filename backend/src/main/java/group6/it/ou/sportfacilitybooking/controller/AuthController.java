@@ -1,20 +1,27 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
-import jakarta.servlet.http.HttpServletRequest;
 import group6.it.ou.sportfacilitybooking.dto.ApiResponse;
+import group6.it.ou.sportfacilitybooking.dto.AuthResponse;
+import group6.it.ou.sportfacilitybooking.dto.UpdatePasswordRequest;
+import group6.it.ou.sportfacilitybooking.dto.UpdateProfileRequest;
 import group6.it.ou.sportfacilitybooking.dto.UserDTO;
 import group6.it.ou.sportfacilitybooking.dto.UserLoginRequest;
 import group6.it.ou.sportfacilitybooking.dto.UserRegistrationRequest;
-import group6.it.ou.sportfacilitybooking.dto.AuthResponse;
-import group6.it.ou.sportfacilitybooking.dto.UpdateProfileRequest;
-import group6.it.ou.sportfacilitybooking.dto.UpdatePasswordRequest;
 import group6.it.ou.sportfacilitybooking.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
