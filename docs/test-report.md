@@ -151,11 +151,11 @@ Thiết kế test case thủ công theo **4 kỹ thuật hộp đen**, dựa tr�
 
 | Kỹ thuật | Mô tả | Số TC |
 |----------|-------|-------|
-| Phân vùng tương đương (EP) | Phân lớp đầu vào hợp lệ / không hợp lệ cho Register, Login, Booking, Review, TimeSlot | 52|
-| Phân tích giá trị biên (BVA) | Kiểm thử giá trị biên của rating (1–5), comment (rỗng/1 ký tự), ngày đặt (hôm nay/quá khứ), overlap timeslot | 29 |
-| Bảng quyết định (DT) | Tổ hợp điều kiện cho Login (3 điều kiện), VNPay return (2 điều kiện), Duyệt sân, Hủy booking, Check-in | 27 |
+| Phân vùng tương đương (EP) | Phân lớp đầu vào hợp lệ / không hợp lệ cho Register, Login, Booking, Review, TimeSlot | 54|
+| Phân tích giá trị biên (BVA) | Kiểm thử giá trị biên của rating (1–5), comment (rỗng/1 ký tự), ngày đặt (hôm nay/quá khứ), overlap timeslot | 19 |
+| Bảng quyết định (DT) | Tổ hợp điều kiện cho Login (3 điều kiện), VNPay return (2 điều kiện), Duyệt sân, Hủy booking, Check-in | 25 |
 | Chuyển trạng thái (ST) | Vòng đời Booking (PENDING_PAYMENT→CONFIRMED→CHECKED_IN), Facility (PENDING→ACTIVE/REJECTED), User (ACTIVE/LOCKED) | 26 |
-| **Tổng** | | **132** |
+| **Tổng** | | **124** |
 
 ### Chức năng được kiểm thử
 
@@ -192,7 +192,7 @@ Hệ thống Sport Facility Booking đã được kiểm thử toàn diện qua 
 |-------------|-------|---------|
 | Unit Test Backend (Spring Boot / JUnit 5) | 274 | ✅ 100% PASSED |
 | Unit Test Frontend (ReactJS / Jest) | 280 | ✅ 100% PASSED |
-| Manual Test (Hộp đen) | 132 | Đã thiết kế – sẵn sàng thực thi |
-| **Tổng** | **688** | |
+| Manual Test (Hộp đen) | 124 | Đã thiết kế – sẵn sàng thực thi |
+| **Tổng** | **678** | |
 
 Các chỉ số đạt và vượt yêu cầu môn học. Qua quá trình thiết kế test case hộp đen, nhóm đã phát hiện một số điểm thiếu validation trong service layer có thể dẫn đến rủi ro logic nghiệp vụ – đây là giá trị thực tế của kiểm thử hộp đen bên cạnh unit test tự động.
