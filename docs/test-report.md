@@ -153,7 +153,7 @@ Thiết kế test case thủ công theo **4 kỹ thuật hộp đen**, dựa tr�
 |----------|-------|-------|
 | Phân vùng tương đương (EP) | Phân lớp đầu vào hợp lệ / không hợp lệ cho Register, Login, Booking, Review, TimeSlot | 54|
 | Phân tích giá trị biên (BVA) | Kiểm thử giá trị biên của rating (1–5), comment (rỗng/1 ký tự), ngày đặt (hôm nay/quá khứ), overlap timeslot | 19 |
-| Bảng quyết định (DT) | Tổ hợp điều kiện cho Login (3 điều kiện), VNPay return (2 điều kiện), Duyệt sân, Hủy booking, Check-in | 21 |
+| Bảng quyết định (DT) | Tổ hợp điều kiện cho Login (3 điều kiện), Duyệt sân, Hủy booking, Check-in | 21 |
 | Chuyển trạng thái (ST) | Vòng đời Booking (PENDING_PAYMENT→CONFIRMED→CHECKED_IN), Facility (PENDING→ACTIVE/REJECTED), User (ACTIVE/LOCKED) | 26 |
 | **Tổng** | | **120** |
 
