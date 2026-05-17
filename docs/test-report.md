@@ -164,7 +164,6 @@ Thiết kế test case thủ công theo **4 kỹ thuật hộp đen**, dựa tr�
 | Đăng ký tài khoản | EP, BVA |
 | Đăng nhập | EP, DT |
 | Đặt sân (Booking) | EP, BVA, ST |
-| Thanh toán VNPay | DT |
 | Gửi đánh giá (Review) | EP, BVA |
 | Cấu hình khung giờ (TimeSlot) | EP, BVA |
 | Admin duyệt / từ chối sân | DT, ST |
