@@ -175,8 +175,6 @@ Thiết kế test case thủ công theo **4 kỹ thuật hộp đen**, dựa tr�
 
 | Phát hiện | Loại | Chi tiết |
 |-----------|------|---------|
-| Không có min-length cho password | Thiếu validation | `UserRegistrationRequest` chỉ có `@NotEmpty`, không có `@Size(min=6)` |
-| Không có format validation cho phone | Thiếu validation | Chỉ `@NotEmpty`, mọi chuỗi ký tự đều được chấp nhận |
 | `cancelBooking()` không kiểm tra trạng thái booking | Rủi ro logic | Service set CANCELLED bất kể trạng thái hiện tại (COMPLETED, CHECKED_IN...) |
 | `confirmBooking()` không kiểm tra trạng thái booking | Rủi ro logic | Service set CONFIRMED từ bất kỳ trạng thái nào |
 | Không có max-length cho comment (Review) | Thiếu validation | Chỉ `@NotEmpty`, giới hạn thực tế phụ thuộc DB column |
