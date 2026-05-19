@@ -1,101 +1,293 @@
 # Test Data
 
-**Project:** Sport Facility Booking System | **Updated:** May 15, 2026
+**Project:** Sport Facility Booking System  
+**Updated:** May 17, 2026
 
 ---
 
-## 1. Users
-
-```json
-{"id": "ADMIN", "email": "admin@sportfacility.com", "password": "Admin@123456", "role": "ADMIN"}
-{"id": "FO001", "email": "owner1@badminton.com", "password": "Owner@123456", "role": "FACILITY_OWNER"}
-{"id": "USER001", "email": "user1@example.com", "password": "User@123456", "role": "USER"}
-{"id": "USER002", "email": "user2@example.com", "password": "User@123456", "role": "USER"}
-```
-
----
-
-## 2. Sport Types
+# 1. Users
 
 ```json
 [
-  {"id": "SPORT001", "name": "Badminton"},
-  {"id": "SPORT002", "name": "Tennis"},
-  {"id": "SPORT003", "name": "Basketball"}
+  {
+    "id": 1,
+    "email": "duc@gmail.com",
+    "password": "buivanduc",
+    "role": "ADMIN"
+  },
+  {
+    "id": 2,
+    "email": "duc1@gmail.com",
+    "password": "buivanduc",
+    "role": "OWNER"
+  },
+  {
+    "id": 3,
+    "email": "duc2@gmail.com",
+    "password": "buivanduc",
+    "role": "CUSTOMER"
+  },
+  {
+    "id": 4,
+    "email": "duc3@gmail.com",
+    "password": "buivanduc",
+    "role": "CUSTOMER"
+  }
 ]
 ```
 
 ---
 
-## 3. Facilities
+# 2. Sport Types
 
 ```json
-{"id": "FAC001", "name": "Badminton Center HCM", "city": "Ho Chi Minh", "status": "APPROVED", "rating": 4.5}
-{"id": "FAC002", "name": "Tennis Court Hanoi", "city": "Hanoi", "status": "APPROVED", "rating": 4.7}
-{"id": "FAC003", "name": "Basketball Arena Da Nang", "city": "Da Nang", "status": "PENDING"}
+[
+  {
+    "id": 1,
+    "name": "Bóng đá 5 người"
+  },
+  {
+    "id": 2,
+    "name": "Bóng đá 7 người"
+  },
+  {
+    "id": 3,
+    "name": "Cầu lông"
+  }
+]
 ```
 
 ---
 
-## 4. Courts
+# 3. Facilities
 
 ```json
-{"id": "COURT001", "facilityId": "FAC001", "name": "Court A1", "type": "Indoor", "price": 150000, "status": "AVAILABLE"}
-{"id": "COURT002", "facilityId": "FAC001", "name": "Court A2", "type": "Indoor", "price": 150000, "status": "AVAILABLE"}
-{"id": "COURT201", "facilityId": "FAC002", "name": "Tennis Court 1", "type": "Outdoor", "price": 200000, "status": "AVAILABLE"}
+[
+  {
+    "id": 1,
+    "name": "Sân cầu lông Nhà Bè",
+    "city": "Hồ Chí Minh",
+    "status": "APPROVED",
+    "rating": 4.67
+  },
+  {
+    "id": 2,
+    "name": "Sân bóng đá Bình Thạnh",
+    "city": "Hồ Chí Minh",
+    "status": "APPROVED"
+  },
+  {
+    "id": 5,
+    "name": "Sân cầu lông Đầm Sen",
+    "city": "Hồ Chí Minh",
+    "status": "REJECTED"
+  },
+  {
+    "id": 11,
+    "name": "Sân bóng đá Quận 10",
+    "city": "Hồ Chí Minh",
+    "status": "SUSPENDED"
+  }
+]
 ```
 
 ---
 
-## 5. Bookings
+# 4. Courts
 
 ```json
-{"id": "BOOK001", "userId": "USER001", "courtId": "COURT001", "date": "2026-05-20", "status": "COMPLETED", "paymentStatus": "PAID"}
-{"id": "BOOK002", "userId": "USER002", "courtId": "COURT002", "date": "2026-05-22", "status": "PENDING", "paymentStatus": "PENDING"}
-{"id": "BOOK003", "userId": "USER001", "courtId": "COURT201", "date": "2026-05-21", "status": "CONFIRMED", "paymentStatus": "PAID"}
+[
+  {
+    "id": 1,
+    "facility_id": 1,
+    "name": "Sân cầu lông số 1",
+    "sport_type_id": 3,
+    "is_indoor": true,
+    "surface_type": "Thảm xanh",
+    "is_active": false
+  },
+  {
+    "id": 2,
+    "facility_id": 1,
+    "name": "Sân cầu lông số 2",
+    "sport_type_id": 3,
+    "is_indoor": true,
+    "surface_type": "Thảm tím",
+    "is_active": true
+  },
+  {
+    "id": 3,
+    "facility_id": 2,
+    "name": "Sân bóng đá 5 người",
+    "sport_type_id": 1,
+    "is_indoor": false,
+    "surface_type": "Sân cỏ nhân tạo",
+    "is_active": true
+  }
+]
 ```
 
 ---
 
-## 6. Payments
+# 5. Bookings
 
 ```json
-{"id": "PAY001", "bookingId": "BOOK001", "amount": 150000, "status": "COMPLETED"}
-{"id": "PAY002", "bookingId": "BOOK002", "amount": 150000, "status": "FAILED", "error": "Card declined"}
+[
+  {
+    "id": 1,
+    "booking_code": "SB-1775049614769-C3E27",
+    "customer_id": 3,
+    "court_id": 1,
+    "status": "CANCELLED"
+  },
+  {
+    "id": 3,
+    "booking_code": "SB-1775050056660-E505D",
+    "customer_id": 3,
+    "court_id": 1,
+    "status": "CHECKED_IN"
+  },
+  {
+    "id": 6,
+    "booking_code": "SB-1775049614769-C3E27",
+    "customer_id": 2,
+    "court_id": 1,
+    "status": "PENDING_PAYMENT"
+  }
+]
 ```
 
 ---
 
-## 7. Reviews
+# 6. Payments
 
 ```json
-{"id": "REV001", "bookingId": "BOOK001", "facilityId": "FAC001", "rating": 5, "comment": "Great facility!"}
-{"id": "REV002", "bookingId": "BOOK003", "facilityId": "FAC002", "rating": 4, "comment": "Good facility"}
+[
+  {
+    "id": 1,
+    "booking_id": 2,
+    "amount": 75000,
+    "status": "PENDING"
+  },
+  {
+    "id": 2,
+    "booking_id": 3,
+    "amount": 60000,
+    "status": "SUCCESS"
+  },
+  {
+    "id": 27,
+    "booking_id": 38,
+    "amount": 195,
+    "status": "FAILED"
+  }
+]
 ```
 
 ---
 
-## 8. Check-ins
+# 7. Reviews
 
 ```json
-{"id": "CHECK001", "bookingId": "BOOK001", "userId": "USER001", "status": "CHECKED_IN"}
-{"id": "CHECK002", "bookingId": "BOOK003", "userId": "USER001", "status": "CHECKED_IN"}
+[
+  {
+    "id": 1,
+    "booking_id": 3,
+    "customer_id": 3,
+    "facility_id": 1,
+    "rating": 4,
+    "comment": "Sân đẹp"
+  },
+  {
+    "id": 2,
+    "booking_id": 7,
+    "customer_id": 2,
+    "facility_id": 1,
+    "rating": 5,
+    "comment": "Sân nhỏ, rẻ"
+  }
+]
 ```
 
 ---
 
-## 9. Edge Cases
+# 8. Check-ins
 
 ```json
-{"email": "invalid-email", "password": "short"}
-{"startTime": "15:00", "endTime": "14:00"}
-{"pricePerHour": -50000}
-{"rating": 10}
+[
+  {
+    "id": 1,
+    "booking_id": 5,
+    "checked_by": 2,
+    "note": "Owner check-in"
+  },
+  {
+    "id": 2,
+    "booking_id": 3,
+    "checked_by": 2,
+    "note": "Owner check-in"
+  }
+]
 ```
 
 ---
 
-**Notes:** 
-- Phone numbers are placeholders
-- Dates relative to May 15, 2026
-- Test credentials only (not for production)
+# 9. Time Slots
+
+```json
+[
+  {
+    "id": 1,
+    "court_id": 1,
+    "day_of_week": null,
+    "start_time": "07:00:00",
+    "end_time": "08:00:00",
+    "price": 200000,
+    "deposit_rate": 30.00,
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "court_id": 1,
+    "day_of_week": null,
+    "start_time": "08:00:00",
+    "end_time": "09:00:00",
+    "price": 250000,
+    "deposit_rate": 30.00,
+    "is_active": true
+  },
+  {
+    "id": 3,
+    "court_id": 1,
+    "day_of_week": 1,
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "price": 300000,
+    "deposit_rate": 30.00,
+    "is_active": true
+  }
+]
+```
+
+---
+
+# 10. Edge Cases
+
+```json
+[
+  {
+    "email": "invalid-email",
+    "password": "short"
+  },
+  {
+    "startTime": "15:00",
+    "endTime": "14:00"
+  },
+  {
+    "pricePerHour": -50000
+  },
+  {
+    "rating": 10
+  }
+]
+```
