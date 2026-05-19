@@ -77,12 +77,26 @@ public class SecurityConfig {
                 
                 // Review endpoints - public read
                 .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
-                
+
+            
                 // Facility images endpoints - public read
                 .requestMatchers(HttpMethod.GET, "/api/facility-images/**").permitAll()
                 
+                    // Chỉ OWNER mới được cancel booking
+                .requestMatchers(HttpMethod.POST, "/api/bookings/*/cancel").hasRole("OWNER")
+
+
+                  // Chỉ ADMIN mới được approve facility
+                .requestMatchers(HttpMethod.POST, "/api/facilities/*/approve").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/facilities/*/reject").hasRole("ADMIN")
+                
+
+                
+        
                 // All other endpoints require authentication
                 .anyRequest().authenticated()
+
+
             );
 
         // Add JWT filter before UsernamePasswordAuthenticationFilter

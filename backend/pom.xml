@@ -28,6 +28,7 @@
 			<scope>test</scope>
 		</dependency>
 
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-test-autoconfigure</artifactId>
@@ -98,6 +99,7 @@
 			<artifactId>cloudinary-http44</artifactId>
 			<version>1.39.0</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -117,7 +119,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-			<!-- ===== Surefire Plugin – Fix Mockito on Java 24 ===== -->
+			<!-- ===== Surefire Plugin - Fix Mockito on Java 24 ===== -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -133,9 +135,11 @@
 				</configuration>
 			</plugin>
 
+
+
 			<!-- ===== JaCoCo Plugin – Code Coverage ===== -->
 			<plugin>
-<groupId>org.jacoco</groupId>
+				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco.version}</version>
 				<executions>
