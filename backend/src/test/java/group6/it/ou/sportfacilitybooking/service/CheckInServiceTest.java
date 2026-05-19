@@ -80,6 +80,23 @@ public class CheckInServiceTest {
     }
 
     @Test
+    void checkIn_notFacilityOwner_throwsNotOwner() {
+        Booking booking = booking(BookingStatus.CONFIRMED, LocalDate.now());
+        booking.setOwnerId(99L); // khác CHECKED_BY_USER_ID = 2L
+        User user = user(CHECKED_BY_USER_ID);
+        CheckInRequest request = request();
+
+        when(bookingRepository.findById(BOOKING_ID)).thenReturn(Optional.of(booking));
+        when(userRepository.findById(CHECKED_BY_USER_ID)).thenReturn(Optional.of(user));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> checkInService.checkIn(BOOKING_ID, CHECKED_BY_USER_ID, request));
+
+        assertEquals("Chỉ chủ sân mới có thể check-in. Bạn không phải là chủ của sân này.", ex.getMessage());
+        verifyNoInteractions(checkInRepository, checkInMapper, notificationRepository);
+    }
+
+    @Test
     void checkIn_pendingPaymentBooking_throwsOnlyConfirmedAllowed() {
         Booking booking = booking(BookingStatus.PENDING_PAYMENT, LocalDate.now());
         User user = user(CHECKED_BY_USER_ID);
