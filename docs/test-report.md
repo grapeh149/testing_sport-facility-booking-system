@@ -153,7 +153,7 @@ Thiết kế test case thủ công theo **4 kỹ thuật hộp đen**, dựa tr�
 |----------|-------|-------|
 | Phân vùng tương đương (EP) | Phân lớp đầu vào hợp lệ / không hợp lệ cho Register, Login, Booking, Review, TimeSlot | 54|
 | Phân tích giá trị biên (BVA) | Kiểm thử giá trị biên của rating (1–5), comment (rỗng/1 ký tự), ngày đặt (hôm nay/quá khứ), overlap timeslot | 19 |
-| Bảng quyết định (DT) | Tổ hợp điều kiện cho Login (3 điều kiện), VNPay return (2 điều kiện), Duyệt sân, Hủy booking, Check-in | 21 |
+| Bảng quyết định (DT) | Tổ hợp điều kiện cho Login (3 điều kiện), Duyệt sân, Hủy booking, Check-in | 21 |
 | Chuyển trạng thái (ST) | Vòng đời Booking (PENDING_PAYMENT→CONFIRMED→CHECKED_IN), Facility (PENDING→ACTIVE/REJECTED), User (ACTIVE/LOCKED) | 26 |
 | **Tổng** | | **120** |
 
@@ -164,7 +164,6 @@ Thiết kế test case thủ công theo **4 kỹ thuật hộp đen**, dựa tr�
 | Đăng ký tài khoản | EP, BVA |
 | Đăng nhập | EP, DT |
 | Đặt sân (Booking) | EP, BVA, ST |
-| Thanh toán VNPay | DT |
 | Gửi đánh giá (Review) | EP, BVA |
 | Cấu hình khung giờ (TimeSlot) | EP, BVA |
 | Admin duyệt / từ chối sân | DT, ST |
@@ -176,8 +175,6 @@ Thiết kế test case thủ công theo **4 kỹ thuật hộp đen**, dựa tr�
 
 | Phát hiện | Loại | Chi tiết |
 |-----------|------|---------|
-| Không có min-length cho password | Thiếu validation | `UserRegistrationRequest` chỉ có `@NotEmpty`, không có `@Size(min=6)` |
-| Không có format validation cho phone | Thiếu validation | Chỉ `@NotEmpty`, mọi chuỗi ký tự đều được chấp nhận |
 | `cancelBooking()` không kiểm tra trạng thái booking | Rủi ro logic | Service set CANCELLED bất kể trạng thái hiện tại (COMPLETED, CHECKED_IN...) |
 | `confirmBooking()` không kiểm tra trạng thái booking | Rủi ro logic | Service set CONFIRMED từ bất kỳ trạng thái nào |
 | Không có max-length cho comment (Review) | Thiếu validation | Chỉ `@NotEmpty`, giới hạn thực tế phụ thuộc DB column |

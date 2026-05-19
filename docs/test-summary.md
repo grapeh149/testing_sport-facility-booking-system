@@ -45,7 +45,7 @@ Kết quả cho thấy hệ thống hoạt động ổn định, đáp ứng cá
 ## Manual Test
 
 - **120 test case** được thiết kế theo 4 kỹ thuật hộp đen, tập trung vào các luồng nghiệp vụ chính.
-- Các chức năng kiểm thử: Đăng ký / Đăng nhập, Đặt sân, Thanh toán VNPay, Đánh giá, Cấu hình khung giờ, Duyệt sân, Check-in, Quản lý tài khoản.
+- Các chức năng kiểm thử: Đăng ký / Đăng nhập, Đặt sân, Đánh giá, Cấu hình khung giờ, Duyệt sân, Check-in, Quản lý tài khoản.
 
 | Kỹ thuật | Số TC |
 |----------|-------|
