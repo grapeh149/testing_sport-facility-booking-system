@@ -128,4 +128,114 @@ class UserServiceTest {
         assertEquals(1, page.getTotalElements());
         assertEquals("test@example.com", page.getContent().get(0).getEmail());
     }
+
+    // [MỚI] - bổ sung độ phủ--------------------------------
+
+    @Test
+    void createUser_withInvalidRole_shouldDefaultToCustomer() {
+        UserRegistrationRequest request = new UserRegistrationRequest();
+        request.setEmail("test2@example.com");
+        request.setPassword("password");
+        request.setFullName("Test");
+        request.setPhone("0123");
+        request.setRole("INVALID_ROLE");
+
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(userMapper.toDTO(any(User.class))).thenAnswer(inv -> {
+            UserDTO dto = new UserDTO();
+            dto.setRole(((User) inv.getArgument(0)).getRole().name());
+            return dto;
+        });
+
+        UserDTO result = userService.createUser(request);
+        assertEquals("CUSTOMER", result.getRole());
+    }
+
+    @Test
+    void createUser_withNullRole_shouldDefaultToCustomer() {
+        UserRegistrationRequest request = new UserRegistrationRequest();
+        request.setEmail("test3@example.com");
+        request.setPassword("password");
+        request.setFullName("Test");
+        request.setPhone("0123");
+        request.setRole(null);
+
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(userMapper.toDTO(any(User.class))).thenAnswer(inv -> {
+            UserDTO dto = new UserDTO();
+            dto.setRole(((User) inv.getArgument(0)).getRole().name());
+            return dto;
+        });
+
+        UserDTO result = userService.createUser(request);
+        assertEquals("CUSTOMER", result.getRole());
+    }
+
+    @Test
+    void getUserProfile_shouldReturnDto_whenUserExists() {
+        User user = new User();
+        user.setId(1L);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDTO(user)).thenReturn(new UserDTO());
+
+        assertNotNull(userService.getUserProfile(1L));
+    }
+
+    @Test
+    void getUserProfile_shouldThrow_whenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> userService.getUserProfile(1L));
+        assertEquals("User not found", ex.getMessage());
+    }
+
+    @Test
+    void updateUserProfile_shouldUpdateFields_whenUserExists() {
+        User user = new User();
+        user.setId(1L);
+        user.setRole(UserRole.CUSTOMER);
+
+        UserDTO dto = new UserDTO();
+        dto.setFullName("New Name");
+        dto.setPhone("0999");
+        dto.setAvatarUrl("https://avatar.url");
+        dto.setRole("OWNER");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDTO(user)).thenReturn(dto);
+
+        userService.updateUserProfile(1L, dto);
+
+        assertEquals("New Name", user.getFullName());
+        assertEquals("0999", user.getPhone());
+        assertEquals(UserRole.OWNER, user.getRole());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    void updateUserProfile_withInvalidRole_shouldKeepExistingRole() {
+        User user = new User();
+        user.setId(1L);
+        user.setRole(UserRole.CUSTOMER);
+
+        UserDTO dto = new UserDTO();
+        dto.setRole("INVALID");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDTO(user)).thenReturn(new UserDTO());
+
+        userService.updateUserProfile(1L, dto);
+
+        assertEquals(UserRole.CUSTOMER, user.getRole());
+    }
+
+    @Test
+    void updateUserProfile_shouldThrow_whenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> userService.updateUserProfile(1L, new UserDTO()));
+        assertEquals("User not found", ex.getMessage());
+    }
 }

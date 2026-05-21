@@ -133,19 +133,26 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.success").value(false));
     }
 
-    // @Test
-    // @DisplayName("Should get all users")
-    // void testGetAllUsers() throws Exception {
-    //     List<UserDTO> userList = List.of(userDTO);
-    //     Page<UserDTO> page = new PageImpl<>(userList);
-    //     when(userService.getAllUsers(any(Pageable.class))).thenReturn(page);
+    // [MỚI] - bổ sung độ phủ dòng 68-69_________________________________________
+    @Test
+    @DisplayName("Should get all users")
+    void testGetAllUsers() throws Exception {
+        @SuppressWarnings("unchecked")
+        org.springframework.data.domain.Page<UserDTO> page =
+                org.mockito.Mockito.mock(org.springframework.data.domain.Page.class);
+        when(page.getContent()).thenReturn(java.util.List.of(userDTO));
+        when(page.getTotalElements()).thenReturn(1L);
+        when(page.getTotalPages()).thenReturn(1);
+        when(page.getNumber()).thenReturn(0);
+        when(page.getSize()).thenReturn(10);
+        when(userService.getAllUsers(any(Pageable.class))).thenReturn(page);
 
-    //     mockMvc.perform(get("/api/users")
-    //             .param("page", "0")
-    //             .param("size", "10"))
-    //             .andExpect(status().isOk())
-    //             .andExpect(jsonPath("$.success").value(true));
-    // }
+        mockMvc.perform(get("/api/users")
+                .param("page", "0")
+                .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+    }
 
     @Test
     @DisplayName("Should handle exception when get all users")
