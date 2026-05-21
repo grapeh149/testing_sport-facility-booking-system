@@ -1,5 +1,8 @@
 package group6.it.ou.sportfacilitybooking.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import group6.it.ou.sportfacilitybooking.entity.FacilityImage;
+import group6.it.ou.sportfacilitybooking.service.FacilityImageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,10 +29,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import group6.it.ou.sportfacilitybooking.entity.FacilityImage;
-import group6.it.ou.sportfacilitybooking.service.FacilityImageService;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.HashMap;
 import java.util.List;
