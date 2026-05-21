@@ -8,6 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
 
 import group6.it.ou.sportfacilitybooking.dto.UserDTO;
 import group6.it.ou.sportfacilitybooking.dto.UserRegistrationRequest;
@@ -137,14 +142,7 @@ class UserControllerTest {
     @Test
     @DisplayName("Should get all users")
     void testGetAllUsers() throws Exception {
-        @SuppressWarnings("unchecked")
-        org.springframework.data.domain.Page<UserDTO> page =
-                org.mockito.Mockito.mock(org.springframework.data.domain.Page.class);
-        when(page.getContent()).thenReturn(java.util.List.of(userDTO));
-        when(page.getTotalElements()).thenReturn(1L);
-        when(page.getTotalPages()).thenReturn(1);
-        when(page.getNumber()).thenReturn(0);
-        when(page.getSize()).thenReturn(10);
+        Page<UserDTO> page = new PageImpl<>(List.of(userDTO), PageRequest.of(0, 10), 1L);
         when(userService.getAllUsers(any(Pageable.class))).thenReturn(page);
 
         mockMvc.perform(get("/api/users")
