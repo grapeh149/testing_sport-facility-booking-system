@@ -56,8 +56,7 @@ sport-facility-booking/
 │
 ├── weekly-report/
 |
-├── README.md
-└── docker-compose.yml
+└── README.md
 ```
 ---
 
