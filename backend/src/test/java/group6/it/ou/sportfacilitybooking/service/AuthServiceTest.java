@@ -17,13 +17,11 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import group6.it.ou.sportfacilitybooking.config.JwtTokenProvider;
 import group6.it.ou.sportfacilitybooking.dto.AuthResponse;
-import group6.it.ou.sportfacilitybooking.dto.UpdatePasswordRequest;
 import group6.it.ou.sportfacilitybooking.dto.UpdateProfileRequest;
 import group6.it.ou.sportfacilitybooking.dto.UserDTO;
 import group6.it.ou.sportfacilitybooking.dto.UserLoginRequest;
@@ -253,4 +251,154 @@ class AuthServiceTest {
         assertTrue(exception.getMessage().contains("Tên đăng nhập đã được sử dụng"));
         verify(userRepository, never()).save(any(User.class));
     }
+
+
+    //   // ===== [MỚI] - BỔ SUNG ĐỘ PHỦ =====
+
+    // // ======= A-03b: login - email không tồn tại (dòng 75-76) ==========
+    // @Test
+    // @DisplayName("A-03b: Đăng nhập thất bại khi email không tồn tại")
+    // void testLoginWithEmailNotFound() {
+    //     when(userRepository.findByEmail("user@test.com")).thenReturn(Optional.empty());
+
+    //     RuntimeException ex = assertThrows(RuntimeException.class,
+    //             () -> authService.login(loginRequest));
+
+    //     assertEquals("Email hoặc mật khẩu không đúng", ex.getMessage());
+    //     verifyNoInteractions(tokenProvider);
+    // }
+
+    // // ==========A-06c: changePassword - user không tồn tại (dòng 109-110) ==========
+    // @Test
+    // @DisplayName("A-06c: Đổi mật khẩu thất bại khi user không tồn tại")
+    // void testChangePassword_UserNotFound() {
+    //     when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+    //     RuntimeException ex = assertThrows(RuntimeException.class,
+    //             () -> authService.changePassword(1L, "old", "new"));
+
+    //     assertEquals("User không tồn tại", ex.getMessage());
+    // }
+
+    // // ==========A-10: getProfile - thành công (dòng 129-138) ==========
+    // @Test
+    // @DisplayName("A-10: Lấy profile thành công")
+    // void testGetProfile_Success() {
+    //     when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+    //     when(userMapper.toDTO(existingUser)).thenReturn(new UserDTO());
+
+    //     UserDTO result = authService.getProfile(1L);
+
+    //     assertNotNull(result);
+    // }
+
+    // // ==========A-11: getProfile - user không tồn tại (dòng 132-134) ==========
+    // @Test
+    // @DisplayName("A-11: Lấy profile thất bại khi user không tồn tại")
+    // void testGetProfile_UserNotFound() {
+    //     when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+    //     RuntimeException ex = assertThrows(RuntimeException.class,
+    //             () -> authService.getProfile(1L));
+
+    //     assertEquals("User không tồn tại", ex.getMessage());
+    // }
+
+    // // ======A-12: updateProfile - set username + avatarUrl (dòng 159, 172) ==========
+    // @Test
+    // @DisplayName("A-12: Cập nhật username chưa bị dùng và avatarUrl thành công")
+    // void testUpdateProfile_UsernameAvailableAndAvatarUrl() {
+    //     UpdateProfileRequest req = new UpdateProfileRequest();
+    //     req.setUsername("newusername");
+    //     req.setFullName("New Name");
+    //     req.setAvatarUrl("https://example.com/avatar.jpg");
+
+    //     when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+    //     when(userRepository.findByUsername("newusername")).thenReturn(Optional.empty());
+    //     when(userMapper.toDTO(existingUser)).thenReturn(new UserDTO());
+
+    //     UserDTO result = authService.updateProfile(1L, req);
+
+    //     assertNotNull(result);
+    //     assertEquals("newusername", existingUser.getUsername());
+    //     assertEquals("https://example.com/avatar.jpg", existingUser.getAvatarUrl());
+    // }
+
+    // // ========A-13: updatePassword - confirm không khớp (dòng 186-188) ==========
+    // @Test
+    // @DisplayName("A-13: updatePassword thất bại khi confirm không khớp")
+    // void testUpdatePassword_ConfirmMismatch() {
+    //     UpdatePasswordRequest req = new UpdatePasswordRequest();
+    //     req.setOldPassword("old");
+    //     req.setNewPassword("new1");
+    //     req.setConfirmPassword("new2");
+
+    //     RuntimeException ex = assertThrows(RuntimeException.class,
+    //             () -> authService.updatePassword(1L, req));
+
+    //     assertEquals("Mật khẩu xác nhận không trùng khớp", ex.getMessage());
+    //     verifyNoInteractions(userRepository);
+    // }
+
+    // // =======A-14: updatePassword - user không tồn tại (dòng 192-194) ==========
+    // @Test
+    // @DisplayName("A-14: updatePassword thất bại khi user không tồn tại")
+    // void testUpdatePassword_UserNotFound() {
+    //     UpdatePasswordRequest req = new UpdatePasswordRequest();
+    //     req.setOldPassword("old");
+    //     req.setNewPassword("new");
+    //     req.setConfirmPassword("new");
+
+    //     when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+    //     RuntimeException ex = assertThrows(RuntimeException.class,
+    //             () -> authService.updatePassword(1L, req));
+
+    //     assertEquals("User không tồn tại", ex.getMessage());
+    // }
+
+    // // =======A-15: updatePassword - mật khẩu cũ sai (dòng 198-200) ==========
+    // @Test
+    // @DisplayName("A-15: updatePassword thất bại khi mật khẩu cũ sai")
+    // void testUpdatePassword_WrongOldPassword() {
+    //     org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder =
+    //             new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+    //     existingUser.setPasswordHash(encoder.encode("correctOld"));
+
+    //     UpdatePasswordRequest req = new UpdatePasswordRequest();
+    //     req.setOldPassword("wrongOld");
+    //     req.setNewPassword("newPass");
+    //     req.setConfirmPassword("newPass");
+
+    //     when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+
+    //     RuntimeException ex = assertThrows(RuntimeException.class,
+    //             () -> authService.updatePassword(1L, req));
+
+    //     assertEquals("Mật khẩu cũ không đúng", ex.getMessage());
+    //     verify(userRepository, never()).save(any(User.class));
+    // }
+    
+
+    // // ======A-16: updatePassword - thành công (dòng 203-209) ==========
+    // @Test
+    // @DisplayName("A-16: updatePassword thành công")
+    // void testUpdatePassword_Success() {
+    //     org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder =
+    //             new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+    //     existingUser.setPasswordHash(encoder.encode("oldPass"));
+
+    //     UpdatePasswordRequest req = new UpdatePasswordRequest();
+    //     req.setOldPassword("oldPass");
+    //     req.setNewPassword("newPass");
+    //     req.setConfirmPassword("newPass");
+
+    //     when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
+    //     when(userMapper.toDTO(existingUser)).thenReturn(new UserDTO());
+
+    //     UserDTO result = authService.updatePassword(1L, req);
+
+    //     assertNotNull(result);
+    //     verify(userRepository, times(1)).save(existingUser);
+    // }
 }
