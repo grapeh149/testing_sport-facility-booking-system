@@ -251,8 +251,6 @@ class AuthServiceTest {
         assertTrue(exception.getMessage().contains("Tên đăng nhập đã được sử dụng"));
         verify(userRepository, never()).save(any(User.class));
     }
-
-
     //   // ===== [MỚI] - BỔ SUNG ĐỘ PHỦ =====
 
     // // ======= A-03b: login - email không tồn tại (dòng 75-76) ==========
