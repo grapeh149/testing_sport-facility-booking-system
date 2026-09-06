@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  # SQL Server chạy local để test, KHÔNG dùng cái này ở production (production dùng Azure SQL)
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong@Passw0rd"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_SERVER: sqlserver   # local: trỏ vào service name, không phải .database.windows.net
+      DB_NAME: mydb
+      DB_USERNAME: sa
+      DB_PASSWORD: "YourStrong@Passw0rd"
+    depends_on:
+      - sqlserver
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    environment:
+      BACKEND_URL: http://backend:8080
+    depends_on:
+      - backend
+
+volumes:
+  sqlserver-data:

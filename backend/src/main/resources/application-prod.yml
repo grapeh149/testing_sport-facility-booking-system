@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    # Connection string tới Azure SQL Database - lấy từ Azure Portal > SQL Database > Connection strings > JDBC
+    url: jdbc:sqlserver://${DB_SERVER}.database.windows.net:1433;database=${DB_NAME};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # KHÔNG dùng "update" hay "create" ở production
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+        format_sql: false
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+
+# Lưu ý: Không hardcode DB_SERVER / DB_USERNAME / DB_PASSWORD trong file này.
+# Các giá trị này sẽ được set qua biến môi trường (Azure App Service > Configuration > Application settings)

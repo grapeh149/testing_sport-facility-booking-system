@@ -1,8 +1,17 @@
-# Maven build
+# Maven
 target/
 
-# OS files
-.DS_Store
+# Node.js
+node_modules/
+dist/
+build/
+.next/
+.nuxt/
+out/
+coverage/
 
 # Logs
 *.log
+
+# OS files
+.DS_Store

@@ -1,0 +1,25 @@
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Cho phép React Router (client-side routing) không bị 404 khi F5
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Proxy các request /api tới backend Spring Boot
+    # Nếu deploy backend và frontend riêng biệt trên Azure, đổi ${BACKEND_URL}
+    # thành domain thật của backend (vd: https://myapp-backend.azurewebsites.net)
+    location /api/ {
+        proxy_pass ${BACKEND_URL}/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+}

@@ -1,0 +1,96 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:   # cho phép chạy tay từ tab Actions để test
+
+env:
+  ACR_NAME: ${{ vars.ACR_NAME }}                     # vd: myappacr (không kèm .azurecr.io)
+  ACR_LOGIN_SERVER: ${{ vars.ACR_NAME }}.azurecr.io
+  BACKEND_APP_NAME: ${{ vars.BACKEND_APP_NAME }}     # tên Azure App Service của backend
+  FRONTEND_APP_NAME: ${{ vars.FRONTEND_APP_NAME }}   # tên Azure App Service của frontend
+  RESOURCE_GROUP: ${{ vars.RESOURCE_GROUP }}
+  IMAGE_TAG: ${{ github.sha }}
+
+permissions:
+  id-token: write   # bắt buộc để dùng OIDC login, không cần lưu password
+  contents: read
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Run tests
+        working-directory: ./backend
+        run: mvn -B test
+
+  build-and-push:
+    needs: test-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Login vào Azure bằng OIDC (không cần lưu client secret trong GitHub)
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Login vào Azure Container Registry
+        run: az acr login --name ${{ env.ACR_NAME }}
+
+      - name: Build & push backend image
+        run: |
+          docker build -t ${{ env.ACR_LOGIN_SERVER }}/backend:${{ env.IMAGE_TAG }} \
+                       -t ${{ env.ACR_LOGIN_SERVER }}/backend:latest \
+                       ./backend
+          docker push ${{ env.ACR_LOGIN_SERVER }}/backend:${{ env.IMAGE_TAG }}
+          docker push ${{ env.ACR_LOGIN_SERVER }}/backend:latest
+
+      - name: Build & push frontend image
+        run: |
+          docker build -t ${{ env.ACR_LOGIN_SERVER }}/frontend:${{ env.IMAGE_TAG }} \
+                       -t ${{ env.ACR_LOGIN_SERVER }}/frontend:latest \
+                       ./frontend
+          docker push ${{ env.ACR_LOGIN_SERVER }}/frontend:${{ env.IMAGE_TAG }}
+          docker push ${{ env.ACR_LOGIN_SERVER }}/frontend:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy backend lên App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.BACKEND_APP_NAME }}
+          images: ${{ env.ACR_LOGIN_SERVER }}/backend:${{ env.IMAGE_TAG }}
+
+      - name: Deploy frontend lên App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.FRONTEND_APP_NAME }}
+          images: ${{ env.ACR_LOGIN_SERVER }}/frontend:${{ env.IMAGE_TAG }}
+
+      - name: Restart apps để pull image mới
+        run: |
+          az webapp restart --name ${{ env.BACKEND_APP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }}
+          az webapp restart --name ${{ env.FRONTEND_APP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }}
