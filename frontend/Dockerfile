@@ -13,7 +13,7 @@ RUN npm run build
 
 # ===== Stage 2: Serve bằng nginx =====
 FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 # Đặt trong /etc/nginx/templates/ để image nginx tự động chạy envsubst
 # thay ${BACKEND_URL} bằng giá trị thật lúc container start
 COPY default.conf.template /etc/nginx/templates/default.conf.template

@@ -1,29 +1,26 @@
-version: "3.9"
+# Không có service DB ở đây — backend nối thẳng vào Azure SQL Database có sẵn,
+# dù chạy local hay production. Điền thông tin thật vào file .env (xem .env.example).
 
 services:
-  # SQL Server chạy local để test, KHÔNG dùng cái này ở production (production dùng Azure SQL)
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "YourStrong@Passw0rd"
-    ports:
-      - "1433:1433"
-    volumes:
-      - sqlserver-data:/var/opt/mssql
-
   backend:
     build: ./backend
     ports:
       - "8080:8080"
+    env_file:
+      - .env 
     environment:
-      SPRING_PROFILES_ACTIVE: dev
-      DB_SERVER: sqlserver   # local: trỏ vào service name, không phải .database.windows.net
-      DB_NAME: mydb
-      DB_USERNAME: sa
-      DB_PASSWORD: "YourStrong@Passw0rd"
-    depends_on:
-      - sqlserver
+      SPRING_PROFILES_ACTIVE: prod   # dùng profile prod vì DB là Azure SQL thật, không phải local
+      DB_SERVER: ${DB_SERVER_NAME}         # vd: myapp-sqlsrv (KHÔNG kèm .database.windows.net)
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      # Alpine base image có sẵn busybox nc, dùng để check port 8080 đã mở chưa
+      test: ["CMD-SHELL", "nc -z localhost 8080 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s   # cho JVM thời gian khởi động trước khi tính lần check đầu
 
   frontend:
     build: ./frontend
@@ -32,7 +29,5 @@ services:
     environment:
       BACKEND_URL: http://backend:8080
     depends_on:
-      - backend
-
-volumes:
-  sqlserver-data:
+      backend:
+        condition: service_healthy   # đợi backend THẬT SỰ sẵn sàng, không chỉ "đã start"

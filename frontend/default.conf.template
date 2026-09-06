@@ -9,11 +9,17 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    # Proxy các request /api tới backend Spring Boot
+    # 127.0.0.11 là DNS server nội bộ của Docker.
+    # Dùng resolver + biến $backend_upstream để nginx resolve LẠI MỖI REQUEST
+    # thay vì chỉ 1 lần lúc container start - tránh lỗi "host not found in upstream"
+    # nếu backend container start chậm hơn hoặc bị restart.
+    resolver 127.0.0.11 valid=10s;
+
     # Nếu deploy backend và frontend riêng biệt trên Azure, đổi ${BACKEND_URL}
     # thành domain thật của backend (vd: https://myapp-backend.azurewebsites.net)
     location /api/ {
-        proxy_pass ${BACKEND_URL}/api/;
+        set $backend_upstream "${BACKEND_URL}";
+        proxy_pass $backend_upstream/api/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
