@@ -24,7 +24,7 @@ public class Review {
     private Facility facility;
 
     @Column(name = "rating", nullable = false)
-    private Byte rating;  // 1-5
+    private Integer rating;  // 1-5
 
     @Column(name = "comment", length = 1000)
     private String comment;
@@ -54,8 +54,8 @@ public class Review {
     public Facility getFacility() { return facility; }
     public void setFacility(Facility facility) { this.facility = facility; }
 
-    public Byte getRating() { return rating; }
-    public void setRating(Byte rating) { this.rating = rating; }
+    public Integer getRating() { return rating; }
+    public void setRating(Integer rating) { this.rating = rating; }
 
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }

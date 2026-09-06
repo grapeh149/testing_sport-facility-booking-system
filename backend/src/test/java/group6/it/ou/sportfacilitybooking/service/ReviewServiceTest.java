@@ -83,7 +83,7 @@ class ReviewServiceTest {
         when(userRepository.findById(2L)).thenReturn(Optional.of(customer));
 
         Review reviewEntity = new Review();
-        reviewEntity.setRating((byte) 5);
+        reviewEntity.setRating((int) 5);
         reviewEntity.setComment("Great facility");
         when(reviewMapper.toEntity(any(ReviewCreateRequest.class))).thenReturn(reviewEntity);
         when(reviewRepository.save(any(Review.class))).thenAnswer(invocation -> invocation.getArgument(0));

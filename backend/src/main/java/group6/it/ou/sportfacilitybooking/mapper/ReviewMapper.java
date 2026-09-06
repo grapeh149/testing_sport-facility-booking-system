@@ -45,7 +45,7 @@ public class ReviewMapper {
         if (request == null) return null;
         
         Review entity = new Review();
-        entity.setRating(request.getRating());
+        entity.setRating(request.getRating().intValue());
         entity.setComment(request.getComment());
         return entity;
     }

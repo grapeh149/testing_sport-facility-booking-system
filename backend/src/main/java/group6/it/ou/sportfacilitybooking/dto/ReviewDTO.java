@@ -9,7 +9,7 @@ public class ReviewDTO {
     private String customerName;
     private Long facilityId;
     private String courtName;
-    private Byte rating;
+    private Integer rating;
     private String comment;
     private String ownerReply;
     private Boolean isVisible;
@@ -18,7 +18,7 @@ public class ReviewDTO {
 
     public ReviewDTO() {}
 
-    public ReviewDTO(Long id, Byte rating) {
+    public ReviewDTO(Long id, Integer rating) {
         this.id = id;
         this.rating = rating;
     }
@@ -45,8 +45,8 @@ public class ReviewDTO {
     public String getCustomerAvatarUrl() { return customerAvatarUrl; }
     public void setCustomerAvatarUrl(String customerAvatarUrl) { this.customerAvatarUrl = customerAvatarUrl; }
 
-    public Byte getRating() { return rating; }
-    public void setRating(Byte rating) { this.rating = rating; }
+    public Integer getRating() { return rating; }
+    public void setRating(Integer rating) { this.rating = rating; }
 
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
