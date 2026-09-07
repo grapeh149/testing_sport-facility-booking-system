@@ -1,7 +1,7 @@
 spring:
   datasource:
     # Connection string tới Azure SQL Database - lấy từ Azure Portal > SQL Database > Connection strings > JDBC
-    url: jdbc:sqlserver://${DB_SERVER}.database.windows.net:1433;database=${DB_NAME};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30
+    url: jdbc:sqlserver://${DB_SERVER_NAME}.database.windows.net:1433;database=${DB_NAME};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
